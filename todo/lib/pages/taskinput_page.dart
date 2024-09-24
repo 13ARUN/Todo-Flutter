@@ -12,22 +12,37 @@ class TaskInput extends StatefulWidget {
 class _TaskInputState extends State<TaskInput> {
   final _formGlobalKey = GlobalKey<FormState>();
 
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _duedateController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _dueDateController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _dueDateController.text = DateTime.now().toString().split(' ')[0];
+  }
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    _duedateController.dispose();
+    _dueDateController.dispose();
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _duedateController.text = DateTime.now().toString();
+  Future<void> _selectDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _dueDateController.text = pickedDate.toString().split(' ')[0];
+      });
+    }
   }
 
   @override
@@ -37,10 +52,12 @@ class _TaskInputState extends State<TaskInput> {
         title: widget.action == 'add'
             ? const Text('Add Task')
             : const Text('Edit Task'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
           child: Form(
             key: _formGlobalKey,
             child: Column(
@@ -50,9 +67,14 @@ class _TaskInputState extends State<TaskInput> {
                   controller: _titleController,
                   maxLength: 25,
                   decoration: const InputDecoration(
-                    label: Text('Title'),
+                    labelText: 'Title',
                     hintText: 'Enter Task Title',
-                    border: OutlineInputBorder(),
+                    filled: true,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple)),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -75,9 +97,14 @@ class _TaskInputState extends State<TaskInput> {
                   maxLength: 180,
                   keyboardType: TextInputType.multiline,
                   decoration: const InputDecoration(
-                    label: Text('Description'),
+                    labelText: 'Description',
                     hintText: 'Enter Task Description',
-                    border: OutlineInputBorder(),
+                    filled: true,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple)),
                   ),
                 ),
                 const SizedBox(
@@ -85,17 +112,25 @@ class _TaskInputState extends State<TaskInput> {
                 ),
                 //* Task Due Date field
                 TextFormField(
-                  controller: _duedateController,
+                  controller: _dueDateController,
+                  readOnly: true,
                   decoration: const InputDecoration(
                     label: Text('Due Date'),
-                    hintText: 'Enter Task Due Date',
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.calendar_today),
+                    hintText: 'Enter Task Description',
+                    filled: true,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple)),
+                    suffixIcon: Icon(Icons.calendar_month, color: Colors.deepPurple,),
                   ),
+                  onTap: _selectDate,
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 30,
                 ),
+                //* Task Form Buttons
                 Row(
                   children: [
                     Expanded(
@@ -104,14 +139,19 @@ class _TaskInputState extends State<TaskInput> {
                           Navigator.pop(context);
                         },
                         style: const ButtonStyle(
+                          fixedSize: WidgetStatePropertyAll(
+                            Size.fromHeight(45),
+                          ),
+                          foregroundColor: WidgetStatePropertyAll(
+                              Color.fromARGB(255, 0, 0, 0)),
                           backgroundColor: WidgetStatePropertyAll(
-                              Color.fromARGB(255, 107, 92, 121)),
+                              Color.fromARGB(255, 234, 224, 231)),
                         ),
                         child: const Text('Cancel'),
                       ),
                     ),
                     const SizedBox(
-                      width: 20,
+                      width: 25,
                     ),
                     Expanded(
                       child: FilledButton(
@@ -121,8 +161,11 @@ class _TaskInputState extends State<TaskInput> {
                           }
                         },
                         style: const ButtonStyle(
+                          fixedSize: WidgetStatePropertyAll(
+                            Size.fromHeight(45),
+                          ),
                           backgroundColor: WidgetStatePropertyAll(
-                              Color.fromARGB(255, 69, 17, 117)),
+                              Colors.deepPurple),
                         ),
                         child: widget.action == 'add'
                             ? const Text('Add')

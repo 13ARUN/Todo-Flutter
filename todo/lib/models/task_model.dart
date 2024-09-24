@@ -2,7 +2,7 @@ import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
 
-class TaskModel {
+class TaskModel{
   TaskModel({
     required this.title,
     required this.description,
@@ -11,6 +11,6 @@ class TaskModel {
 
   final String id;
   final String title;
-  final double description;
+  final String description;
   final DateTime date;
 }
