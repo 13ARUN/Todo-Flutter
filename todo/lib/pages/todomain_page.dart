@@ -14,6 +14,7 @@ class TodoMainPageState extends State<TodoMainPage> {
   final List<TaskModel> _tasks = [];
   List<TaskModel> _deletedTasksBackup = [];
 
+  //* Snackbar 
   void _showSnackBar(String text, {SnackBarAction? action}) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -25,6 +26,7 @@ class TodoMainPageState extends State<TodoMainPage> {
     );
   }
 
+  //* Add Task
   void _addTask(TaskModel task) {
     setState(() {
       _tasks.add(task);
@@ -32,6 +34,7 @@ class TodoMainPageState extends State<TodoMainPage> {
     _showSnackBar('${task.title} added!');
   }
 
+  //* Delete Task
   void _removeTask(TaskModel task) {
     final taskIndex = _tasks.indexOf(task);
     setState(() {
@@ -50,9 +53,10 @@ class TodoMainPageState extends State<TodoMainPage> {
     );
   }
 
+  //* Edit Task
   void _editTask(TaskModel editedTask) {
-    final taskIndex = _tasks.indexWhere((task) => task.id == editedTask.id);
-    if (taskIndex >= 0) {
+    final taskIndex = _tasks.indexWhere((t) => t.id == editedTask.id);
+    if (taskIndex != -1) {
       setState(() {
         _tasks[taskIndex] = editedTask;
       });
@@ -62,6 +66,7 @@ class TodoMainPageState extends State<TodoMainPage> {
     }
   }
 
+  //* Toggle Status
   void _toggleTaskCompletion(TaskModel task, bool isCompleted) {
     setState(() {
       final index = _tasks.indexWhere((t) => t.id == task.id);
@@ -71,12 +76,13 @@ class TodoMainPageState extends State<TodoMainPage> {
           title: task.title,
           description: task.description,
           date: task.date,
-          isCompleted: isCompleted, // Update completion status
+          isCompleted: isCompleted,
         );
       }
     });
   }
 
+  //* Delete all Tasks Confirmation
   Future<void> _confirmDeleteAll() async {
     final shouldDelete = await showDialog<bool>(
       context: context,
@@ -105,6 +111,7 @@ class TodoMainPageState extends State<TodoMainPage> {
     }
   }
 
+  //* Delete all Tasks
   void _deleteAllTasks() {
     setState(() {
       _deletedTasksBackup = List.from(_tasks); // Backup tasks in case of undo
@@ -147,9 +154,9 @@ class TodoMainPageState extends State<TodoMainPage> {
           IconButton(
             onPressed: _tasks.isNotEmpty
                 ? () {
-                    _confirmDeleteAll(); // Show confirmation dialog
+                    _confirmDeleteAll();
                   }
-                : null, // Disable button if no tasks
+                : null, 
             icon: const Icon(Icons.delete),
           ),
         ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo/models/task_model.dart';
 
+import 'package:todo/models/task_model.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
@@ -42,6 +42,7 @@ class _TaskInputState extends State<TaskInput> {
     super.dispose();
   }
 
+  //* Date picker Helper
   Future<void> _selectDate() async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -57,21 +58,20 @@ class _TaskInputState extends State<TaskInput> {
     }
   }
 
+  //* Return Task Inputs
   void _submitTaskData() {
-    final enteredTitle = _titleController.text;
-    final enteredDescription = _descriptionController.text;
-    final pickedDate = _dueDateController.text;
+    final enteredTitle = _titleController.text.trim();
+    final enteredDescription = _descriptionController.text.trim();
+    final selectedDate = _dueDateController.text;
 
-    // Creating or editing the task
-    final returnedTask = TaskModel(
+    final tasktoReturn = TaskModel(
       id: widget.action == 'add' ? uuid.v4() : widget.task!.id,
       title: enteredTitle,
       description: enteredDescription,
-      date: pickedDate,
+      date: selectedDate,
       isCompleted: widget.action == 'add' ? false : widget.task!.isCompleted,
     );
-
-    Navigator.pop(context, returnedTask);
+    Navigator.pop(context, tasktoReturn);
   }
 
   @override

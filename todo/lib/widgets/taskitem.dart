@@ -44,10 +44,10 @@ class TaskItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Checkbox(
-        value: task.isCompleted, // Bind checkbox value to task's completion status
+        value: task.isCompleted,
         onChanged: (value) {
           if (value != null) {
-            onToggleComplete(value); // Call the function to toggle task completion status
+            onToggleComplete(value);
           }
         },
       ),
@@ -56,7 +56,7 @@ class TaskItem extends StatelessWidget {
       ),
       subtitle: Text(task.date),
       trailing: Row(
-        mainAxisSize: MainAxisSize.min, // Ensure buttons stay compact
+        mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
             icon: const Icon(Icons.edit),

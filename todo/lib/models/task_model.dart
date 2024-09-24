@@ -5,10 +5,11 @@ class TaskModel {
   final String date;
   final bool isCompleted;
 
-  TaskModel(
-      {required this.id,
-      required this.title,
-      required this.description,
-      required this.date,
-      required this.isCompleted});
+  TaskModel({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.date,
+    required this.isCompleted,
+  });
 }
