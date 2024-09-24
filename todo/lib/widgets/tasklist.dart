@@ -8,11 +8,13 @@ class TaskList extends StatelessWidget {
     required this.tasklist,
     required this.onDeleteTask,
     required this.onEditTask,
+    required this.onToggleCompleteTask,  // Add a new parameter for completion toggle callback
   });
 
   final List<TaskModel> tasklist;
   final void Function(TaskModel task) onDeleteTask; // Function to delete a task
   final void Function(TaskModel task) onEditTask;   // Function to edit a task
+  final void Function(TaskModel task, bool isCompleted) onToggleCompleteTask; // Function to toggle task completion
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +27,12 @@ class TaskList extends StatelessWidget {
           child: TaskItem(
             task: tasklist[index],
             onDelete: () => onDeleteTask(tasklist[index]), // Pass delete handler
-            onEdit: (TaskModel editedTask) => onEditTask(editedTask),     // Pass edit handler
+            onEdit: (TaskModel editedTask) => onEditTask(editedTask),  // Pass edit handler
+            onToggleComplete: (isCompleted) => onToggleCompleteTask(tasklist[index], isCompleted), // Handle completion toggle
           ),
         ),
       ),
     );
   }
 }
+

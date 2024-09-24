@@ -8,11 +8,13 @@ class TaskItem extends StatelessWidget {
     required this.task,
     required this.onDelete,
     required this.onEdit,
+    required this.onToggleComplete,  // Add a callback for toggling completion
   });
 
   final TaskModel task;
   final void Function() onDelete; // Callback for delete action
   final void Function(TaskModel editedTask) onEdit; // Function to call when task is edited
+  final void Function(bool isCompleted) onToggleComplete; // New callback for completion toggle
 
   Future<void> _showDeleteConfirmation(BuildContext context) async {
     final confirmed = await showDialog<bool>(
@@ -42,12 +44,16 @@ class TaskItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Checkbox(
-        value: false, // Bind checkbox value to task's completion status
+        value: task.isCompleted, // Bind checkbox value to task's completion status
         onChanged: (value) {
-          // Here you could handle task completion toggle if needed
+          if (value != null) {
+            onToggleComplete(value); // Call the function to toggle task completion status
+          }
         },
       ),
-      title: Text(task.title),
+      title: Text(
+        task.title,
+      ),
       subtitle: Text(task.date),
       trailing: Row(
         mainAxisSize: MainAxisSize.min, // Ensure buttons stay compact
@@ -66,8 +72,7 @@ class TaskItem extends StatelessWidget {
               );
 
               if (editedTask != null) {
-                onEdit(editedTask);
-                // Handle task update
+                onEdit(editedTask); // Update the task after editing
               }
             },
           ),

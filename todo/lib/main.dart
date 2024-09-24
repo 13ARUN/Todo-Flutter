@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo/pages/todo_page.dart';
+import 'package:todo/pages/todomain_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'To-Do',
       debugShowCheckedModeBanner: false,
       color: Colors.indigo,
-      home: Todopage(),
+      home: TodoMainPage(),
     );
   }
 }

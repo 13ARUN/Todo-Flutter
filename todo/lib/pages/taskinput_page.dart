@@ -7,7 +7,7 @@ const uuid = Uuid();
 
 class TaskInput extends StatefulWidget {
   final String action;
-  final TaskModel? task; // Optional task for editing
+  final TaskModel? task;
 
   const TaskInput({super.key, required this.action, this.task});
 
@@ -68,6 +68,7 @@ class _TaskInputState extends State<TaskInput> {
       title: enteredTitle,
       description: enteredDescription,
       date: pickedDate,
+      isCompleted: widget.action == 'add' ? false : widget.task!.isCompleted,
     );
 
     Navigator.pop(context, returnedTask);
@@ -159,7 +160,7 @@ class _TaskInputState extends State<TaskInput> {
                   onTap: _selectDate,
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 25,
                 ),
                 //* Task Form Buttons
                 Row(
@@ -170,6 +171,9 @@ class _TaskInputState extends State<TaskInput> {
                           Navigator.pop(context);
                         },
                         style: ButtonStyle(
+                          foregroundColor: WidgetStateProperty.all(
+                            const Color.fromARGB(255, 0, 0, 0),
+                          ),
                           backgroundColor: WidgetStateProperty.all(
                             const Color.fromARGB(255, 234, 224, 231),
                           ),
@@ -198,7 +202,7 @@ class _TaskInputState extends State<TaskInput> {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
