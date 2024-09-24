@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/taskinput_page.dart';
 import 'package:todo/widgets/tasklist.dart';
@@ -12,8 +11,8 @@ class TodoMainPage extends StatefulWidget {
 }
 
 class TodoMainPageState extends State<TodoMainPage> {
-
   final List<TaskModel> _tasks = [];
+  List<TaskModel> _deletedTasksBackup = [];
 
   void _showSnackBar(String text, {SnackBarAction? action}) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -78,9 +77,54 @@ class TodoMainPageState extends State<TodoMainPage> {
     });
   }
 
+  Future<void> _confirmDeleteAll() async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Confirm Delete All'),
+        content: const Text('Are you sure you want to delete all tasks? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop(false); // Cancel deletion
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop(true); // Confirm deletion
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete == true) {
+      _deleteAllTasks();
+    }
+  }
+
+  void _deleteAllTasks() {
+    setState(() {
+      _deletedTasksBackup = List.from(_tasks); // Backup tasks in case of undo
+      _tasks.clear();
+    });
+    _showSnackBar(
+      'All tasks deleted',
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          setState(() {
+            _tasks.addAll(_deletedTasksBackup); // Restore tasks from backup
+          });
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
     Widget pageContent = const Center(
       child: Text('No Tasks Found!'),
     );
@@ -99,6 +143,16 @@ class TodoMainPageState extends State<TodoMainPage> {
         title: const Text('ToDo App'),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            onPressed: _tasks.isNotEmpty
+                ? () {
+                    _confirmDeleteAll(); // Show confirmation dialog
+                  }
+                : null, // Disable button if no tasks
+            icon: const Icon(Icons.delete),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -113,7 +167,7 @@ class TodoMainPageState extends State<TodoMainPage> {
             _addTask(newTask);
           }
         },
-        splashColor: Colors.deepPurpleAccent,
+        splashColor: const Color.fromARGB(255, 154, 129, 223),
         child: const Icon(Icons.add),
       ),
       body: pageContent,
