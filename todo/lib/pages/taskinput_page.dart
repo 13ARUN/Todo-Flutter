@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:todo/models/task_model.dart';
+
+import 'package:uuid/uuid.dart';
+
+const uuid = Uuid();
 
 class TaskInput extends StatefulWidget {
-  const TaskInput({super.key, required this.action});
-
   final String action;
+  final TaskModel? task; // Optional task for editing
+
+  const TaskInput({super.key, required this.action, this.task});
 
   @override
   State<TaskInput> createState() => _TaskInputState();
@@ -19,7 +25,13 @@ class _TaskInputState extends State<TaskInput> {
   @override
   void initState() {
     super.initState();
-    _dueDateController.text = DateTime.now().toString().split(' ')[0];
+    if (widget.action == 'edit' && widget.task != null) {
+      _titleController.text = widget.task!.title;
+      _descriptionController.text = widget.task!.description;
+      _dueDateController.text = widget.task!.date;
+    } else {
+      _dueDateController.text = DateTime.now().toString().split(' ')[0];
+    }
   }
 
   @override
@@ -43,6 +55,22 @@ class _TaskInputState extends State<TaskInput> {
         _dueDateController.text = pickedDate.toString().split(' ')[0];
       });
     }
+  }
+
+  void _submitTaskData() {
+    final enteredTitle = _titleController.text;
+    final enteredDescription = _descriptionController.text;
+    final pickedDate = _dueDateController.text;
+
+    // Creating or editing the task
+    final returnedTask = TaskModel(
+      id: widget.action == 'add' ? uuid.v4() : widget.task!.id,
+      title: enteredTitle,
+      description: enteredDescription,
+      date: pickedDate,
+    );
+
+    Navigator.pop(context, returnedTask);
   }
 
   @override
@@ -80,7 +108,7 @@ class _TaskInputState extends State<TaskInput> {
                     if (value == null || value.isEmpty) {
                       return "Enter a task title";
                     }
-                    if (value.trim() == '') {
+                    if (value.trim().isEmpty) {
                       return "Task cannot contain only spaces";
                     }
                     return null;
@@ -123,7 +151,10 @@ class _TaskInputState extends State<TaskInput> {
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.deepPurple)),
-                    suffixIcon: Icon(Icons.calendar_month, color: Colors.deepPurple,),
+                    suffixIcon: Icon(
+                      Icons.calendar_month,
+                      color: Colors.deepPurple,
+                    ),
                   ),
                   onTap: _selectDate,
                 ),
@@ -138,14 +169,10 @@ class _TaskInputState extends State<TaskInput> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        style: const ButtonStyle(
-                          fixedSize: WidgetStatePropertyAll(
-                            Size.fromHeight(45),
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(
+                            const Color.fromARGB(255, 234, 224, 231),
                           ),
-                          foregroundColor: WidgetStatePropertyAll(
-                              Color.fromARGB(255, 0, 0, 0)),
-                          backgroundColor: WidgetStatePropertyAll(
-                              Color.fromARGB(255, 234, 224, 231)),
                         ),
                         child: const Text('Cancel'),
                       ),
@@ -157,15 +184,13 @@ class _TaskInputState extends State<TaskInput> {
                       child: FilledButton(
                         onPressed: () {
                           if (_formGlobalKey.currentState!.validate()) {
-                            _formGlobalKey.currentState!.reset();
+                            _submitTaskData();
                           }
                         },
                         style: const ButtonStyle(
-                          fixedSize: WidgetStatePropertyAll(
-                            Size.fromHeight(45),
-                          ),
                           backgroundColor: WidgetStatePropertyAll(
-                              Colors.deepPurple),
+                            Colors.deepPurple,
+                          ),
                         ),
                         child: widget.action == 'add'
                             ? const Text('Add')
