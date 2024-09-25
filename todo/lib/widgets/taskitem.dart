@@ -82,7 +82,6 @@ class TaskItem extends StatelessWidget {
           ),
         ],
       ),
-      tileColor: const Color.fromARGB(255, 233, 224, 248),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),

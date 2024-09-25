@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:todo/models/task_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -81,8 +80,6 @@ class _TaskInputState extends State<TaskInput> {
         title: widget.action == 'add'
             ? const Text('Add Task')
             : const Text('Edit Task'),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -93,6 +90,7 @@ class _TaskInputState extends State<TaskInput> {
               children: [
                 //* Task Title field
                 TextFormField(
+                  autofocus: true,
                   controller: _titleController,
                   maxLength: 25,
                   decoration: const InputDecoration(
@@ -154,7 +152,6 @@ class _TaskInputState extends State<TaskInput> {
                         borderSide: BorderSide(color: Colors.deepPurple)),
                     suffixIcon: Icon(
                       Icons.calendar_month,
-                      color: Colors.deepPurple,
                     ),
                   ),
                   onTap: _selectDate,
@@ -170,14 +167,7 @@ class _TaskInputState extends State<TaskInput> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        style: ButtonStyle(
-                          foregroundColor: WidgetStateProperty.all(
-                            const Color.fromARGB(255, 0, 0, 0),
-                          ),
-                          backgroundColor: WidgetStateProperty.all(
-                            const Color.fromARGB(255, 234, 224, 231),
-                          ),
-                        ),
+                        
                         child: const Text('Cancel'),
                       ),
                     ),
@@ -191,11 +181,6 @@ class _TaskInputState extends State<TaskInput> {
                             _submitTaskData();
                           }
                         },
-                        style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            Colors.deepPurple,
-                          ),
-                        ),
                         child: widget.action == 'add'
                             ? const Text('Add')
                             : const Text('Update'),

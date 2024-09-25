@@ -14,7 +14,7 @@ class TodoMainPageState extends State<TodoMainPage> {
   final List<TaskModel> _tasks = [];
   List<TaskModel> _deletedTasksBackup = [];
 
-  //* Snackbar 
+  //* Snackbar
   void _showSnackBar(String text, {SnackBarAction? action}) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -88,7 +88,8 @@ class TodoMainPageState extends State<TodoMainPage> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Confirm Delete All'),
-        content: const Text('Are you sure you want to delete all tasks? This action cannot be undone.'),
+        content: const Text(
+            'Are you sure you want to delete all tasks? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () {
@@ -132,8 +133,24 @@ class TodoMainPageState extends State<TodoMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget pageContent = const Center(
-      child: Text('No Tasks Found!'),
+    Widget pageContent = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(
+          height: 200,
+          width: 200,
+          child: Image.asset('assets/images/notask.png'),
+        ),
+        Center(
+          child: Text(
+            "Click on + icon to create a new task!",
+            textScaler: const TextScaler.linear(1.2),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimaryContainer),
+          ),
+        )
+      ],
     );
 
     if (_tasks.isNotEmpty) {
@@ -148,15 +165,13 @@ class TodoMainPageState extends State<TodoMainPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo App'),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,
         actions: [
           IconButton(
             onPressed: _tasks.isNotEmpty
                 ? () {
                     _confirmDeleteAll();
                   }
-                : null, 
+                : null,
             icon: const Icon(Icons.delete),
           ),
         ],
@@ -174,7 +189,7 @@ class TodoMainPageState extends State<TodoMainPage> {
             _addTask(newTask);
           }
         },
-        splashColor: const Color.fromARGB(255, 154, 129, 223),
+        shape: const CircleBorder(eccentricity: 1),
         child: const Icon(Icons.add),
       ),
       body: pageContent,
