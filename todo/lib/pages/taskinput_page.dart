@@ -97,11 +97,6 @@ class _TaskInputState extends State<TaskInput> {
                     labelText: 'Title',
                     hintText: 'Enter Task Title',
                     filled: true,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.deepPurple)),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -127,11 +122,7 @@ class _TaskInputState extends State<TaskInput> {
                     labelText: 'Description',
                     hintText: 'Enter Task Description',
                     filled: true,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.deepPurple)),
+                    
                   ),
                 ),
                 const SizedBox(
@@ -145,11 +136,6 @@ class _TaskInputState extends State<TaskInput> {
                     label: Text('Due Date'),
                     hintText: 'Enter Task Description',
                     filled: true,
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.deepPurple)),
                     suffixIcon: Icon(
                       Icons.calendar_month,
                     ),
@@ -167,7 +153,6 @@ class _TaskInputState extends State<TaskInput> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        
                         child: const Text('Cancel'),
                       ),
                     ),

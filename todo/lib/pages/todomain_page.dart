@@ -117,6 +117,7 @@ class TodoMainPageState extends State<TodoMainPage> {
     setState(() {
       _deletedTasksBackup = List.from(_tasks); // Backup tasks in case of undo
       _tasks.clear();
+      Navigator.pop(context);
     });
     _showSnackBar(
       'All tasks deleted',
@@ -138,16 +139,14 @@ class TodoMainPageState extends State<TodoMainPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(
-          height: 200,
+          height: 250,
           width: 200,
           child: Image.asset('assets/images/notask.png'),
         ),
-        Center(
+        const Center(
           child: Text(
             "Click on + icon to create a new task!",
-            textScaler: const TextScaler.linear(1.2),
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimaryContainer),
+            textScaler: TextScaler.linear(1.2),
           ),
         )
       ],
@@ -164,16 +163,32 @@ class TodoMainPageState extends State<TodoMainPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ToDo App'),
+        title: const Text('Task Manager'),
         actions: [
-          IconButton(
-            onPressed: _tasks.isNotEmpty
-                ? () {
-                    _confirmDeleteAll();
-                  }
-                : null,
-            icon: const Icon(Icons.delete),
-          ),
+          PopupMenuButton(
+            position: PopupMenuPosition.under,
+            itemBuilder: (context) => [
+              if (_tasks.isNotEmpty)
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: const Icon(Icons.delete),
+                    title: const Text('Delete all'),
+                    onTap: _tasks.isNotEmpty
+                        ? () {
+                            _confirmDeleteAll();
+                          }
+                        : null,
+                  ),
+                ),
+              PopupMenuItem(
+                child: ListTile(
+                  leading: const Icon(Icons.settings),
+                  title: const Text('Settings'),
+                  onTap: () => Navigator.pop(context),
+                ),
+              ),
+            ],
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(

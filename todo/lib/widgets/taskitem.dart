@@ -8,13 +8,15 @@ class TaskItem extends StatelessWidget {
     required this.task,
     required this.onDelete,
     required this.onEdit,
-    required this.onToggleComplete,  // Add a callback for toggling completion
+    required this.onToggleComplete, // Add a callback for toggling completion
   });
 
   final TaskModel task;
   final void Function() onDelete; // Callback for delete action
-  final void Function(TaskModel editedTask) onEdit; // Function to call when task is edited
-  final void Function(bool isCompleted) onToggleComplete; // New callback for completion toggle
+  final void Function(TaskModel editedTask)
+      onEdit; // Function to call when task is edited
+  final void Function(bool isCompleted)
+      onToggleComplete; // New callback for completion toggle
 
   Future<void> _showDeleteConfirmation(BuildContext context) async {
     final confirmed = await showDialog<bool>(
@@ -43,6 +45,27 @@ class TaskItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      // onTap: () {
+      //   showDialog(
+      //     context: context,
+      //     builder: (context) {
+      //       return Dialog(
+      //         child: SizedBox(
+                
+      //           height: 200,
+      //           child: Column(
+      //             mainAxisAlignment: MainAxisAlignment.center,
+      //             children: [
+      //               Text(task.title),
+      //               Text(task.description),
+      //               Text(task.date),
+      //             ],
+      //           ),
+      //         ),
+      //       );
+      //     },
+      //   );
+      // },
       leading: Checkbox(
         value: task.isCompleted,
         onChanged: (value) {
@@ -78,7 +101,8 @@ class TaskItem extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.delete_rounded),
-            onPressed: () => _showDeleteConfirmation(context), // Show confirmation dialog
+            onPressed: () =>
+                _showDeleteConfirmation(context), // Show confirmation dialog
           ),
         ],
       ),

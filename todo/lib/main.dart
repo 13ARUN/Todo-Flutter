@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:todo/pages/todomain_page.dart';
 
 var kColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color.fromARGB(255, 138, 113, 181),
+  seedColor: const Color.fromARGB(255, 156, 86, 237),
 );
 
-var kDarkColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color.fromARGB(255, 34, 255, 0),
-);
+// var kDarkColorScheme = ColorScheme.fromSeed(
+//   seedColor: const Color.fromARGB(255, 34, 62, 165),
+// );
 
 void main() {
   runApp(const MyApp());
@@ -22,42 +22,61 @@ class MyApp extends StatelessWidget {
       title: 'To-Do',
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData.dark().copyWith(
-        colorScheme: kDarkColorScheme,
+        colorScheme: const ColorScheme.dark(),
         brightness: Brightness.dark,
         appBarTheme: const AppBarTheme().copyWith(
-          backgroundColor: kDarkColorScheme.onPrimaryContainer,
-          foregroundColor: kDarkColorScheme.primaryContainer,
-        ),
-      ),
-      theme: ThemeData().copyWith(
-        colorScheme: kColorScheme,
-        appBarTheme: const AppBarTheme().copyWith(
-          backgroundColor: kColorScheme.onPrimaryContainer,
-          foregroundColor: kColorScheme.onPrimary,
+          backgroundColor: kColorScheme.onPrimaryFixed,
+          foregroundColor: kColorScheme.primaryContainer,
         ),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: kColorScheme.inversePrimary,
+        ),
+        listTileTheme: ListTileThemeData(
+          iconColor: kColorScheme.surfaceBright,
+          tileColor: kColorScheme.onSurface,
+        ),
+        popupMenuTheme: PopupMenuThemeData(
+          color: kColorScheme.onSurface,
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor:
+                WidgetStatePropertyAll(kColorScheme.onSecondaryFixedVariant),
+            foregroundColor: WidgetStatePropertyAll(kColorScheme.onPrimary),
+          ),
+        ),
+      ),
+      theme: ThemeData().copyWith(
+        colorScheme: const ColorScheme.light(),
+        brightness: Brightness.light,
+        appBarTheme: const AppBarTheme().copyWith(
+          backgroundColor: kColorScheme.onPrimaryFixed,
+          foregroundColor: kColorScheme.primaryContainer,
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: kColorScheme.onPrimaryFixedVariant,
         ),
         checkboxTheme: const CheckboxThemeData().copyWith(
           checkColor: WidgetStatePropertyAll(kColorScheme.onPrimary),
         ),
         snackBarTheme: SnackBarThemeData(
           backgroundColor: kColorScheme.onPrimaryContainer,
-          actionTextColor: kColorScheme.onPrimary,
         ),
         listTileTheme: ListTileThemeData(
             iconColor: kColorScheme.onPrimaryContainer,
-            tileColor: kColorScheme.surfaceContainerHigh),
+            tileColor: kColorScheme.surfaceContainerHighest),
         filledButtonTheme: FilledButtonThemeData(
           style: ButtonStyle(
             backgroundColor:
-                WidgetStatePropertyAll(kColorScheme.onPrimaryContainer),
-            foregroundColor:
-                WidgetStatePropertyAll(kColorScheme.onPrimary),
+                WidgetStatePropertyAll(kColorScheme.onSecondaryFixedVariant),
+            foregroundColor: WidgetStatePropertyAll(kColorScheme.onPrimary),
           ),
         ),
+        popupMenuTheme: PopupMenuThemeData(
+          color: kColorScheme.surfaceContainerHighest,
+        ),
       ),
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.system,
       home: const TodoMainPage(),
     );
   }
