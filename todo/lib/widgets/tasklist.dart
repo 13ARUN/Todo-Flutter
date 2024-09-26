@@ -15,12 +15,12 @@ class TaskList extends StatelessWidget {
   final List<TaskModel> tasklist;
   final void Function(TaskModel task) onDeleteTask;
   final void Function(TaskModel task) onEditTask;
-  final void Function(TaskModel task, bool isCompleted) onToggleCompleteTask;
+  final void Function(TaskModel task) onToggleCompleteTask;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(10),
       child: ListView.builder(
         itemCount: tasklist.length,
         itemBuilder: (context, index) => Container(
@@ -29,7 +29,7 @@ class TaskList extends StatelessWidget {
             task: tasklist[index],
             onDelete: () => onDeleteTask(tasklist[index]),
             onEdit: (TaskModel editedTask) => onEditTask(editedTask),
-            onToggleComplete: (isCompleted) => onToggleCompleteTask(tasklist[index], isCompleted),
+            onToggleComplete: () => onToggleCompleteTask(tasklist[index]),
           ),
         ),
       ),

@@ -5,21 +5,26 @@ import 'package:uuid/uuid.dart';
 const uuid = Uuid();
 
 class TaskInput extends StatefulWidget {
+  const TaskInput({
+    super.key,
+    required this.action,
+    this.task,
+  });
+  
   final String action;
   final TaskModel? task;
 
-  const TaskInput({super.key, required this.action, this.task});
-
   @override
-  State<TaskInput> createState() => _TaskInputState();
+  State<TaskInput> createState() => TaskInputState();
 }
 
-class _TaskInputState extends State<TaskInput> {
+class TaskInputState extends State<TaskInput> {
+
   final _formGlobalKey = GlobalKey<FormState>();
 
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _dueDateController = TextEditingController();
+  final  _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _dueDateController = TextEditingController();
 
   @override
   void initState() {
@@ -43,11 +48,12 @@ class _TaskInputState extends State<TaskInput> {
 
   //* Date picker Helper
   Future<void> _selectDate() async {
+    DateTime now = DateTime.now();
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(now.year + 1, now.month, now.day),
     );
 
     if (pickedDate != null) {
@@ -92,7 +98,7 @@ class _TaskInputState extends State<TaskInput> {
                 TextFormField(
                   autofocus: true,
                   controller: _titleController,
-                  maxLength: 25,
+                  maxLength: 35,
                   decoration: const InputDecoration(
                     labelText: 'Title',
                     hintText: 'Enter Task Title',

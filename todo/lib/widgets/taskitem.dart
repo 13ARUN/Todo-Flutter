@@ -15,14 +15,15 @@ class TaskItem extends StatelessWidget {
   final TaskModel task;
   final void Function() onDelete;
   final void Function(TaskModel editedTask) onEdit;
-  final void Function(bool isCompleted) onToggleComplete;
+  final void Function() onToggleComplete;
 
   Future<void> _showDeleteConfirmation(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Task'),
-        content: const Text('Are you sure you want to delete this task?'),
+        content:
+            Text("Are you sure you want to delete the task?  '${task.title}'"),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false), // Cancel deletion
@@ -68,15 +69,17 @@ class TaskItem extends StatelessWidget {
       // },
       leading: Checkbox(
         value: task.isCompleted,
-        
         onChanged: (value) {
           if (value != null) {
-            onToggleComplete(value);
+            onToggleComplete();
           }
         },
       ),
       title: Text(
         task.title,
+        style: const TextStyle(
+          fontSize: 20,
+        ),
       ),
       subtitle: Text(task.date),
       trailing: Row(
@@ -117,7 +120,6 @@ class TaskItem extends StatelessWidget {
           : brightness == Brightness.dark
               ? kColorScheme.onPrimaryFixedVariant
               : kColorScheme.primaryFixedDim,
-      
     );
   }
 }

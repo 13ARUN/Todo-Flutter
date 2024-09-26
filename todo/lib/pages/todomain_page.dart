@@ -15,13 +15,13 @@ class TodoMainPageState extends State<TodoMainPage> {
   List<TaskModel> _deletedTasksBackup = [];
 
   //* Snackbar
-  void _showSnackBar(String text, {SnackBarAction? action}) {
+  void _showSnackBar(String message, {SnackBarAction? action}) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 2),
-        content: Text(text),
-        action: action, // Optional action parameter
+        content: Text(message),
+        action: action,
       ),
     );
   }
@@ -35,7 +35,7 @@ class TodoMainPageState extends State<TodoMainPage> {
   }
 
   //* Delete Task
-  void _removeTask(TaskModel task) {
+  void _deleteTask(TaskModel task) {
     final taskIndex = _tasks.indexOf(task);
     setState(() {
       _tasks.remove(task);
@@ -67,39 +67,45 @@ class TodoMainPageState extends State<TodoMainPage> {
   }
 
   //* Toggle Status
-  void _toggleTaskCompletion(TaskModel task, bool isCompleted) {
+  void _toggleTaskCompletion(TaskModel task) {
     setState(() {
-      final index = _tasks.indexWhere((t) => t.id == task.id);
-      if (index != -1) {
-        _tasks[index] = TaskModel(
+      final taskIndex = _tasks.indexWhere((t) => t.id == task.id);
+      if (taskIndex != -1) {
+        _tasks[taskIndex] = TaskModel(
           id: task.id,
           title: task.title,
           description: task.description,
           date: task.date,
-          isCompleted: isCompleted,
+          isCompleted: !_tasks[taskIndex].isCompleted,
         );
       }
     });
   }
 
   //* Delete all Tasks Confirmation
-  Future<void> _confirmDeleteAll() async {
+  Future<void> _confirmDelete(String action) async {
     final shouldDelete = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confirm Delete All'),
-        content: const Text(
-            'Are you sure you want to delete all tasks? This action cannot be undone.'),
+        title: action == 'all'
+            ? const Text('Confirm Delete All')
+            : const Text('Confirm Delete Completed'),
+        content: action == 'all'
+            ? const Text('Are you sure you want to delete all tasks?')
+            : const Text(
+                'Are you sure you want to delete all completed tasks? This action cannot be undone'),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(ctx).pop(false); // Cancel deletion
+              Navigator.of(ctx).pop(false);
+              Navigator.pop(ctx); // Cancel deletion
             },
             child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(ctx).pop(true); // Confirm deletion
+              Navigator.of(ctx).pop(true);
+              Navigator.pop(ctx); // Confirm deletion
             },
             child: const Text('Delete'),
           ),
@@ -107,17 +113,20 @@ class TodoMainPageState extends State<TodoMainPage> {
       ),
     );
 
-    if (shouldDelete == true) {
+    if (shouldDelete == true && action == 'all') {
       _deleteAllTasks();
+    }
+
+    if (shouldDelete == true && action == 'completed') {
+      _deleteCompletedTasks();
     }
   }
 
   //* Delete all Tasks
   void _deleteAllTasks() {
     setState(() {
-      _deletedTasksBackup = List.from(_tasks); // Backup tasks in case of undo
+      _deletedTasksBackup = List.from(_tasks);
       _tasks.clear();
-      Navigator.pop(context);
     });
     _showSnackBar(
       'All tasks deleted',
@@ -125,10 +134,24 @@ class TodoMainPageState extends State<TodoMainPage> {
         label: 'Undo',
         onPressed: () {
           setState(() {
-            _tasks.addAll(_deletedTasksBackup); // Restore tasks from backup
+            _tasks.addAll(_deletedTasksBackup);
           });
         },
       ),
+    );
+  }
+
+  //* Delete completed Tasks
+  void _deleteCompletedTasks() {
+    final completedTasks = _tasks.where((task) => task.isCompleted).toList();
+
+    setState(() {
+      _deletedTasksBackup = List.from(completedTasks);
+      _tasks.removeWhere((task) => task.isCompleted);
+    });
+
+    _showSnackBar(
+      'Completed tasks deleted',
     );
   }
 
@@ -155,7 +178,7 @@ class TodoMainPageState extends State<TodoMainPage> {
     if (_tasks.isNotEmpty) {
       pageContent = TaskList(
         tasklist: _tasks,
-        onDeleteTask: _removeTask,
+        onDeleteTask: _deleteTask,
         onEditTask: _editTask,
         onToggleCompleteTask: _toggleTaskCompletion,
       );
@@ -168,18 +191,6 @@ class TodoMainPageState extends State<TodoMainPage> {
           PopupMenuButton(
             position: PopupMenuPosition.under,
             itemBuilder: (context) => [
-              if (_tasks.isNotEmpty)
-                PopupMenuItem(
-                  child: ListTile(
-                    leading: const Icon(Icons.delete),
-                    title: const Text('Delete all'),
-                    onTap: _tasks.isNotEmpty
-                        ? () {
-                            _confirmDeleteAll();
-                          }
-                        : null,
-                  ),
-                ),
               PopupMenuItem(
                 child: ListTile(
                   leading: const Icon(Icons.settings),
@@ -187,8 +198,30 @@ class TodoMainPageState extends State<TodoMainPage> {
                   onTap: () => Navigator.pop(context),
                 ),
               ),
+              if (_tasks.isNotEmpty)
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: const Icon(Icons.delete),
+                    title: const Text('Delete all'),
+                    onTap: _tasks.isNotEmpty
+                        ? () {
+                            _confirmDelete('all');
+                          }
+                        : null,
+                  ),
+                ),
+              if (_tasks.any((task) => task.isCompleted))
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: const Icon(Icons.delete_sweep),
+                    title: const Text('Delete completed'),
+                    onTap: () {
+                      _confirmDelete('completed');
+                    },
+                  ),
+                ),
             ],
-          )
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
