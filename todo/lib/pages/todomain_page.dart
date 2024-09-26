@@ -196,7 +196,7 @@ class TodoMainPageState extends State<TodoMainPage> {
                 child: ListTile(
                   leading: const Icon(Icons.settings),
                   title: const Text('Settings'),
-                  onTap: () => Navigator.pop(context),
+                  onTap: () {},
                 ),
               ),
               if (_tasks.isNotEmpty)
@@ -204,11 +204,9 @@ class TodoMainPageState extends State<TodoMainPage> {
                   child: ListTile(
                     leading: const Icon(Icons.delete),
                     title: const Text('Delete all'),
-                    onTap: _tasks.isNotEmpty
-                        ? () {
-                            _confirmDelete('all');
-                          }
-                        : null,
+                    onTap: () {
+                      _confirmDelete('all');
+                    },
                   ),
                 ),
               if (_tasks.any((task) => task.isCompleted))
