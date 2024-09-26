@@ -19,7 +19,7 @@ class TodoMainPageState extends State<TodoMainPage> {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        duration: const Duration(seconds: 2),
+        duration: const Duration(seconds: 3),
         content: Text(message),
         action: action,
       ),
@@ -187,6 +187,7 @@ class TodoMainPageState extends State<TodoMainPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Task Manager'),
+        titleSpacing: 25,
         actions: [
           PopupMenuButton(
             position: PopupMenuPosition.under,

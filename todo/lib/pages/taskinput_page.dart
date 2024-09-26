@@ -85,7 +85,7 @@ class TaskInputState extends State<TaskInput> {
       appBar: AppBar(
         title: widget.action == 'add'
             ? const Text('Add Task')
-            : const Text('Edit Task'),
+            : const Text('Update Task'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -98,7 +98,7 @@ class TaskInputState extends State<TaskInput> {
                 TextFormField(
                   autofocus: true,
                   controller: _titleController,
-                  maxLength: 35,
+                  maxLength: 30,
                   decoration: const InputDecoration(
                     labelText: 'Title',
                     hintText: 'Enter Task Title',
@@ -121,8 +121,8 @@ class TaskInputState extends State<TaskInput> {
                 TextFormField(
                   controller: _descriptionController,
                   minLines: 1,
-                  maxLines: 5,
-                  maxLength: 180,
+                  maxLines: 3,
+                  maxLength: 120,
                   keyboardType: TextInputType.multiline,
                   decoration: const InputDecoration(
                     labelText: 'Description',

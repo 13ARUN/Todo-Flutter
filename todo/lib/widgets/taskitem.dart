@@ -81,28 +81,30 @@ class TaskItem extends StatelessWidget {
           fontSize: 20,
         ),
       ),
-      subtitle: Text(task.date),
+      subtitle: Text('Due: ${task.date}'),
+      // subtitle: task.isCompleted ? null : Text('Due: ${task.date}'),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () async {
-              final editedTask = await Navigator.push<TaskModel>(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TaskInput(
-                    action: 'edit',
-                    task: task, // Pass the task to be edited
+          if (!task.isCompleted)
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () async {
+                final editedTask = await Navigator.push<TaskModel>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TaskInput(
+                      action: 'edit',
+                      task: task, // Pass the task to be edited
+                    ),
                   ),
-                ),
-              );
+                );
 
-              if (editedTask != null) {
-                onEdit(editedTask); // Update the task after editing
-              }
-            },
-          ),
+                if (editedTask != null) {
+                  onEdit(editedTask); // Update the task after editing
+                }
+              },
+            ),
           IconButton(
             icon: const Icon(Icons.delete_rounded),
             onPressed: () =>

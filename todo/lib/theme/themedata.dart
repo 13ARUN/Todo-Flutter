@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 var kColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color.fromARGB(255, 113, 58, 184),
+  seedColor: const Color.fromARGB(255, 117, 58, 184),
 );
 
 final ThemeData lightTheme = ThemeData().copyWith(
@@ -10,6 +10,7 @@ final ThemeData lightTheme = ThemeData().copyWith(
   appBarTheme: const AppBarTheme().copyWith(
     backgroundColor: kColorScheme.onPrimaryFixed,
     foregroundColor: kColorScheme.primaryContainer,
+    toolbarHeight: 65,
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
     backgroundColor: kColorScheme.onPrimaryContainer,
@@ -47,16 +48,26 @@ final ThemeData lightTheme = ThemeData().copyWith(
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(color: kColorScheme.primary),
     ),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: kColorScheme.error),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: kColorScheme.error),
+    ),
+    errorStyle: TextStyle(color: kColorScheme.error),
     labelStyle: TextStyle(color: kColorScheme.onPrimaryContainer),
   ),
   textSelectionTheme: TextSelectionThemeData(
     cursorColor: kColorScheme.onPrimaryContainer,
     selectionColor: kColorScheme.inversePrimary,
-    selectionHandleColor: kColorScheme.primaryContainer,
+    selectionHandleColor: kColorScheme.onPrimaryContainer,
   ),
   datePickerTheme: DatePickerThemeData(
-    todayBackgroundColor:
-        WidgetStatePropertyAll(kColorScheme.onPrimaryContainer),
+    todayBorder: BorderSide(color: kColorScheme.error),
+    rangePickerBackgroundColor: kColorScheme.error,
+    todayBackgroundColor: WidgetStatePropertyAll(kColorScheme.primary),
+    todayForegroundColor: WidgetStatePropertyAll(kColorScheme.surfaceBright),
+    headerBackgroundColor: kColorScheme.primaryContainer,
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
@@ -95,6 +106,13 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(color: kColorScheme.primary),
     ),
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: kColorScheme.error),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: kColorScheme.error),
+    ),
+    errorStyle: TextStyle(color: kColorScheme.error),
     labelStyle: TextStyle(color: kColorScheme.surfaceContainerLow),
   ),
   snackBarTheme: const SnackBarThemeData().copyWith(
@@ -116,6 +134,8 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
   ),
   datePickerTheme: DatePickerThemeData(
     todayBackgroundColor: WidgetStatePropertyAll(kColorScheme.inversePrimary),
+    todayForegroundColor: WidgetStatePropertyAll(kColorScheme.onSurface),
+    headerBackgroundColor: kColorScheme.onPrimaryContainer,
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
