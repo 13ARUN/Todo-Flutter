@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
-import 'package:todo/pages/taskinput_page.dart'; // Import your TaskInput page
+import 'package:todo/pages/taskinput_page.dart';
+import 'package:todo/theme/themedata.dart';
 
 class TaskItem extends StatelessWidget {
   const TaskItem({
@@ -8,15 +9,13 @@ class TaskItem extends StatelessWidget {
     required this.task,
     required this.onDelete,
     required this.onEdit,
-    required this.onToggleComplete, // Add a callback for toggling completion
+    required this.onToggleComplete,
   });
 
   final TaskModel task;
-  final void Function() onDelete; // Callback for delete action
-  final void Function(TaskModel editedTask)
-      onEdit; // Function to call when task is edited
-  final void Function(bool isCompleted)
-      onToggleComplete; // New callback for completion toggle
+  final void Function() onDelete;
+  final void Function(TaskModel editedTask) onEdit;
+  final void Function(bool isCompleted) onToggleComplete;
 
   Future<void> _showDeleteConfirmation(BuildContext context) async {
     final confirmed = await showDialog<bool>(
@@ -44,6 +43,8 @@ class TaskItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Brightness brightness = MediaQuery.of(context).platformBrightness;
+
     return ListTile(
       // onTap: () {
       //   showDialog(
@@ -51,7 +52,6 @@ class TaskItem extends StatelessWidget {
       //     builder: (context) {
       //       return Dialog(
       //         child: SizedBox(
-                
       //           height: 200,
       //           child: Column(
       //             mainAxisAlignment: MainAxisAlignment.center,
@@ -68,6 +68,7 @@ class TaskItem extends StatelessWidget {
       // },
       leading: Checkbox(
         value: task.isCompleted,
+        
         onChanged: (value) {
           if (value != null) {
             onToggleComplete(value);
@@ -109,6 +110,14 @@ class TaskItem extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
+      tileColor: task.isCompleted
+          ? brightness == Brightness.dark
+              ? kColorScheme.onSurface
+              : kColorScheme.surfaceContainerHighest
+          : brightness == Brightness.dark
+              ? kColorScheme.onPrimaryFixedVariant
+              : kColorScheme.primaryFixedDim,
+      
     );
   }
 }

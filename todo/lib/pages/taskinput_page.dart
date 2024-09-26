@@ -122,7 +122,6 @@ class _TaskInputState extends State<TaskInput> {
                     labelText: 'Description',
                     hintText: 'Enter Task Description',
                     filled: true,
-                    
                   ),
                 ),
                 const SizedBox(
