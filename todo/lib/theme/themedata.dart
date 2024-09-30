@@ -71,8 +71,8 @@ final ThemeData lightTheme = ThemeData().copyWith(
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
-        foregroundColor:
-            WidgetStatePropertyAll(kColorScheme.onPrimaryContainer)),
+      foregroundColor: WidgetStatePropertyAll(kColorScheme.onPrimaryContainer),
+    ),
   ),
 );
 
@@ -139,6 +139,7 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
-        foregroundColor: WidgetStatePropertyAll(kColorScheme.inversePrimary)),
+      foregroundColor: WidgetStatePropertyAll(kColorScheme.inversePrimary),
+    ),
   ),
 );

@@ -10,7 +10,7 @@ class TaskInput extends StatefulWidget {
     required this.action,
     this.task,
   });
-  
+
   final String action;
   final TaskModel? task;
 
@@ -19,10 +19,9 @@ class TaskInput extends StatefulWidget {
 }
 
 class TaskInputState extends State<TaskInput> {
-
   final _formGlobalKey = GlobalKey<FormState>();
 
-  final  _titleController = TextEditingController();
+  final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _dueDateController = TextEditingController();
 
@@ -34,7 +33,7 @@ class TaskInputState extends State<TaskInput> {
       _descriptionController.text = widget.task!.description;
       _dueDateController.text = widget.task!.date;
     } else {
-      _dueDateController.text = DateTime.now().toString().split(' ')[0];
+      _dueDateController.text = _formatDate(DateTime.now());
     }
   }
 
@@ -44,6 +43,10 @@ class TaskInputState extends State<TaskInput> {
     _descriptionController.dispose();
     _dueDateController.dispose();
     super.dispose();
+  }
+
+  String _formatDate(DateTime date) {
+    return date.toString().split(' ')[0];
   }
 
   //* Date picker Helper
@@ -58,7 +61,7 @@ class TaskInputState extends State<TaskInput> {
 
     if (pickedDate != null) {
       setState(() {
-        _dueDateController.text = pickedDate.toString().split(' ')[0];
+        _dueDateController.text = _formatDate(pickedDate);
       });
     }
   }
@@ -110,6 +113,9 @@ class TaskInputState extends State<TaskInput> {
                     }
                     if (value.trim().isEmpty) {
                       return "Task cannot contain only spaces";
+                    }
+                    if(value.length < 5){
+                      return "Task must be atleast 5 characters long";
                     }
                     return null;
                   },

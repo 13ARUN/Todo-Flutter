@@ -26,11 +26,11 @@ class TaskItem extends StatelessWidget {
             Text("Are you sure you want to delete the task?  '${task.title}'"),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false), // Cancel deletion
+            onPressed: () => Navigator.of(ctx).pop(false),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true), // Confirm deletion
+            onPressed: () => Navigator.of(ctx).pop(true),
             child: const Text('Delete'),
           ),
         ],
@@ -38,7 +38,7 @@ class TaskItem extends StatelessWidget {
     );
 
     if (confirmed == true) {
-      onDelete(); // Proceed with deletion if user confirmed
+      onDelete();
     }
   }
 
@@ -95,20 +95,20 @@ class TaskItem extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => TaskInput(
                       action: 'edit',
-                      task: task, // Pass the task to be edited
+                      task: task,
                     ),
                   ),
                 );
 
                 if (editedTask != null) {
-                  onEdit(editedTask); // Update the task after editing
+                  onEdit(editedTask);
                 }
               },
             ),
           IconButton(
             icon: const Icon(Icons.delete_rounded),
             onPressed: () =>
-                _showDeleteConfirmation(context), // Show confirmation dialog
+                _showDeleteConfirmation(context),
           ),
         ],
       ),

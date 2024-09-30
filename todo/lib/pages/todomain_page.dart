@@ -82,6 +82,7 @@ class TodoMainPageState extends State<TodoMainPage> {
     });
   }
 
+
   //* Delete all Tasks Confirmation
   Future<void> _confirmDelete(String action) async {
     final shouldDelete = await showDialog<bool>(
@@ -191,7 +192,7 @@ class TodoMainPageState extends State<TodoMainPage> {
         actions: [
           PopupMenuButton(
             position: PopupMenuPosition.under,
-            itemBuilder: (context) => [
+            itemBuilder: (context) => <PopupMenuItem>[
               PopupMenuItem(
                 child: ListTile(
                   leading: const Icon(Icons.settings),
@@ -212,7 +213,7 @@ class TodoMainPageState extends State<TodoMainPage> {
               if (_tasks.any((task) => task.isCompleted))
                 PopupMenuItem(
                   child: ListTile(
-                    leading: const Icon(Icons.delete_sweep),
+                    leading: const Icon(Icons.delete_sweep_rounded),
                     title: const Text('Delete completed'),
                     onTap: () {
                       _confirmDelete('completed');
