@@ -7,10 +7,10 @@ class TodoMainPage extends StatefulWidget {
   const TodoMainPage({super.key});
 
   @override
-  State<TodoMainPage> createState() => TodoMainPageState();
+  State<TodoMainPage> createState() => _TodoMainPageState();
 }
 
-class TodoMainPageState extends State<TodoMainPage> {
+class _TodoMainPageState extends State<TodoMainPage> {
   final List<TaskModel> _tasks = [];
   List<TaskModel> _deletedTasksBackup = [];
 

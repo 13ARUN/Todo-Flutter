@@ -15,10 +15,10 @@ class TaskInput extends StatefulWidget {
   final TaskModel? task;
 
   @override
-  State<TaskInput> createState() => TaskInputState();
+  State<TaskInput> createState() => _TaskInputState();
 }
 
-class TaskInputState extends State<TaskInput> {
+class _TaskInputState extends State<TaskInput> {
   final _formGlobalKey = GlobalKey<FormState>();
 
   final _titleController = TextEditingController();
@@ -45,6 +45,7 @@ class TaskInputState extends State<TaskInput> {
     super.dispose();
   }
 
+  //* Date Formatter
   String _formatDate(DateTime date) {
     return date.toString().split(' ')[0];
   }
@@ -87,8 +88,8 @@ class TaskInputState extends State<TaskInput> {
     return Scaffold(
       appBar: AppBar(
         title: widget.action == 'add'
-            ? const Text('Add Task')
-            : const Text('Update Task'),
+            ? const Text('Add a new task')
+            : const Text('Update task'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -114,7 +115,7 @@ class TaskInputState extends State<TaskInput> {
                     if (value.trim().isEmpty) {
                       return "Task cannot contain only spaces";
                     }
-                    if(value.length < 5){
+                    if(value.trim().length < 5){
                       return "Task must be atleast 5 characters long";
                     }
                     return null;
