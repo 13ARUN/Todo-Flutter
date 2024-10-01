@@ -59,18 +59,19 @@ To get a local copy of the project up and running, follow these steps.
 
 The Project is structured as follows
 
-lib/
-├── models/
-│   └── task_model.dart        # Task model definition
-├── pages/
-│   ├── taskinput_page.dart    # Page for adding/editing tasks
-│   └── todomain_page.dart     # Page displaying list of tasks
-├── theme/
-│   └── themedata.dart         # Theme Data for light and dark mode
-├── widgets/
-│   ├── taskitem.dart          # Widget for displaying a Task Tile
-│   └── tasklist.dart          # Widget for displaying the list of tasks
-└── main.dart                  # Entry point of the application
+lib/  
+├── models/  
+│   └── task_model.dart        # Task model definition  
+├── pages/  
+│   ├── taskinput_page.dart    # Page for adding/editing tasks  
+│   └── todomain_page.dart     # Page displaying list of tasks  
+├── theme/  
+│   └── themedata.dart         # Theme Data for light and dark mode  
+├── widgets/  
+│   ├── taskitem.dart          # Widget for displaying a Task Tile  
+│   └── tasklist.dart          # Widget for displaying the list of tasks  
+└── main.dart                  # Entry point of the application  
+
 
 
 ## Application Version
