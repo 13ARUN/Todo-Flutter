@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:uuid/uuid.dart';
+import 'package:intl/intl.dart';
 
 const uuid = Uuid();
 
@@ -51,7 +52,8 @@ class _TaskInputState extends State<TaskInput> {
 
   //* Date Formatter
   String _formatDate(DateTime date) {
-    return date.toString().split(' ')[0];
+    final DateFormat formatter = DateFormat.yMd();
+    return formatter.format(date);
   }
 
   //* Date picker Helper
