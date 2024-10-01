@@ -33,7 +33,7 @@ To get a local copy of the project up and running, follow these steps.
 - Dart SDK
 - An IDE such as Android Studio or Visual Studio Code
 
-### Installation
+## Installation
 
 1. Clone the repository:
 
@@ -51,7 +51,7 @@ To get a local copy of the project up and running, follow these steps.
 
   flutter run
 
-### Usage
+## Usage
 
 1. Open the app on your device or emulator.
 2. Click the `+` icon to create a new task.
@@ -59,7 +59,7 @@ To get a local copy of the project up and running, follow these steps.
 4. View your tasks on the main screen, where you can edit or delete them.
 5. Use the app bar menu to delete all or completed tasks.
 
-### Folder Structure
+## Folder Structure
 
 The Project is structured as follows
 
@@ -77,11 +77,11 @@ lib/
 └── main.dart                  # Entry point of the application
 
 
-### Application Version
+## Application Version
 
   version: 1.0.0+1
 
-### Flutter Doctor
+## Flutter Doctor
 
 [√] Flutter (Channel stable, 3.24.2, on Microsoft Windows [Version
     10.0.19045.4894], locale en-US)
