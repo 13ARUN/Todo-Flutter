@@ -52,7 +52,7 @@ class _TaskInputState extends State<TaskInput> {
 
   //* Date Formatter
   String _formatDate(DateTime date) {
-    final DateFormat formatter = DateFormat.yMd();
+    final DateFormat formatter = DateFormat('MMM d, yyyy');
     return formatter.format(date);
   }
 
