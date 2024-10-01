@@ -35,21 +35,17 @@ To get a local copy of the project up and running, follow these steps.
 
 ## Installation
 
-1. Clone the repository:
-
-  git clone https://github.com/yourusername/todo_app.git
+1. Clone the repository: 
+    git clone https://github.com/yourusername/todo_app.git
 
 2. Navigate to the project directory:
-
-  cd todo_app
+    cd todo_app
 
 3. Install dependencies:
+    flutter pub get
 
-  flutter pub get
-
-4.Run the application:
-
-  flutter run
+4. Run the application:
+    flutter run
 
 ## Usage
 
