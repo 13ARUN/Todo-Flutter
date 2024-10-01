@@ -28,13 +28,7 @@ class _TaskInputState extends State<TaskInput> {
   @override
   void initState() {
     super.initState();
-    if (widget.action == 'edit' && widget.task != null) {
-      _titleController.text = widget.task!.title;
-      _descriptionController.text = widget.task!.description;
-      _dueDateController.text = widget.task!.date;
-    } else {
-      _dueDateController.text = _formatDate(DateTime.now());
-    }
+    _initialData();
   }
 
   @override
@@ -43,6 +37,16 @@ class _TaskInputState extends State<TaskInput> {
     _descriptionController.dispose();
     _dueDateController.dispose();
     super.dispose();
+  }
+
+  void _initialData() {
+    if (widget.action == 'edit' && widget.task != null) {
+      _titleController.text = widget.task!.title;
+      _descriptionController.text = widget.task!.description;
+      _dueDateController.text = widget.task!.date;
+    } else {
+      _dueDateController.text = _formatDate(DateTime.now());
+    }
   }
 
   //* Date Formatter
@@ -87,9 +91,9 @@ class _TaskInputState extends State<TaskInput> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: widget.action == 'add'
-            ? const Text('Add a new task')
-            : const Text('Update task'),
+        title: Text(
+          widget.action == "add" ? "Add a new task" : "Update task",
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -115,7 +119,7 @@ class _TaskInputState extends State<TaskInput> {
                     if (value.trim().isEmpty) {
                       return "Task cannot contain only spaces";
                     }
-                    if(value.trim().length < 5){
+                    if (value.trim().length < 5) {
                       return "Task must be atleast 5 characters long";
                     }
                     return null;
@@ -178,9 +182,7 @@ class _TaskInputState extends State<TaskInput> {
                             _submitTaskData();
                           }
                         },
-                        child: widget.action == 'add'
-                            ? const Text('Add')
-                            : const Text('Update'),
+                        child: Text(widget.action == 'add' ? 'Add' : 'Update'),
                       ),
                     ),
                   ],

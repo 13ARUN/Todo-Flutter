@@ -18,7 +18,7 @@ class TaskItem extends StatelessWidget {
   final void Function() onToggleComplete;
 
   Future<void> _showDeleteConfirmation(BuildContext context) async {
-    final confirmed = await showDialog<bool>(
+    showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Task'),
@@ -26,20 +26,20 @@ class TaskItem extends StatelessWidget {
             Text("Are you sure you want to delete the task?  '${task.title}'"),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
+            onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
+            onPressed: () {
+              Navigator.pop(context);
+              onDelete();
+            },
+            
             child: const Text('Delete'),
           ),
         ],
       ),
     );
-
-    if (confirmed == true) {
-      onDelete();
-    }
   }
 
   @override
@@ -67,14 +67,6 @@ class TaskItem extends StatelessWidget {
       //     },
       //   );
       // },
-      leading: Checkbox(
-        value: task.isCompleted,
-        onChanged: (value) {
-          if (value != null) {
-            onToggleComplete();
-          }
-        },
-      ),
       title: Text(
         task.title,
         style: const TextStyle(
@@ -86,6 +78,14 @@ class TaskItem extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Checkbox(
+            value: task.isCompleted,
+            onChanged: (value) {
+              if (value != null) {
+                onToggleComplete();
+              }
+            },
+          ),
           if (!task.isCompleted)
             IconButton(
               icon: const Icon(Icons.edit),
@@ -107,8 +107,7 @@ class TaskItem extends StatelessWidget {
             ),
           IconButton(
             icon: const Icon(Icons.delete_rounded),
-            onPressed: () =>
-                _showDeleteConfirmation(context),
+            onPressed: () => _showDeleteConfirmation(context),
           ),
         ],
       ),

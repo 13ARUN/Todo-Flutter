@@ -82,53 +82,46 @@ class _TodoMainPageState extends State<TodoMainPage> {
     });
   }
 
-
   //* Delete all Tasks Confirmation
   Future<void> _confirmDelete(String action) async {
-    final shouldDelete = await showDialog<bool>(
+    final bool isDeleteAll = (action == "all");
+
+    showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: action == 'all'
-            ? const Text('Confirm Delete All')
-            : const Text('Confirm Delete Completed'),
-        content: action == 'all'
-            ? const Text('Are you sure you want to delete all tasks?')
-            : const Text(
-                'Are you sure you want to delete all completed tasks? This action cannot be undone'),
+        title: Text(
+            isDeleteAll ? "Confirm Delete All" : "Confirm Delete Completed"),
+        content: Text(isDeleteAll
+            ? "Are you sure you want to delete all tasks?"
+            : "Are you sure you want to delete all completed tasks? This action cannot be undone."),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(ctx).pop(false);
-              Navigator.pop(ctx); // Cancel deletion
+              Navigator.pop(ctx);
+              Navigator.pop(ctx);
             },
             child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(ctx).pop(true);
-              Navigator.pop(ctx); // Confirm deletion
+              isDeleteAll ? _deleteAllTasks() : _deleteCompletedTasks();
+              Navigator.pop(ctx);
+              Navigator.pop(ctx);
             },
             child: const Text('Delete'),
           ),
         ],
       ),
     );
-
-    if (shouldDelete == true && action == 'all') {
-      _deleteAllTasks();
-    }
-
-    if (shouldDelete == true && action == 'completed') {
-      _deleteCompletedTasks();
-    }
   }
 
   //* Delete all Tasks
   void _deleteAllTasks() {
+    _deletedTasksBackup = List.from(_tasks);
     setState(() {
-      _deletedTasksBackup = List.from(_tasks);
       _tasks.clear();
     });
+
     _showSnackBar(
       'All tasks deleted',
       action: SnackBarAction(
@@ -158,33 +151,6 @@ class _TodoMainPageState extends State<TodoMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget pageContent = Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(
-          height: 250,
-          width: 200,
-          child: Image.asset('assets/images/notask.png'),
-        ),
-        const Center(
-          child: Text(
-            "Click on + icon to create a new task!",
-            textScaler: TextScaler.linear(1.2),
-          ),
-        )
-      ],
-    );
-
-    if (_tasks.isNotEmpty) {
-      pageContent = TaskList(
-        tasklist: _tasks,
-        onDeleteTask: _deleteTask,
-        onEditTask: _editTask,
-        onToggleCompleteTask: _toggleTaskCompletion,
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Task Manager'),
@@ -240,7 +206,38 @@ class _TodoMainPageState extends State<TodoMainPage> {
         shape: const CircleBorder(eccentricity: 1),
         child: const Icon(Icons.add),
       ),
-      body: pageContent,
+      body: _tasks.isNotEmpty ? taksView() : noTaksView(),
     );
   }
+
+  Widget taksView() {
+    return TaskList(
+      tasklist: _tasks,
+      onDeleteTask: _deleteTask,
+      onEditTask: _editTask,
+      onToggleCompleteTask: _toggleTaskCompletion,
+    );
+  }
+
+  Widget noTaksView() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SizedBox(
+          height: 250,
+          width: 200,
+          child: Image.asset('assets/images/notask.png'),
+        ),
+        const Center(
+          child: Text(
+            "Click on + icon to create a new task!",
+            textScaler: TextScaler.linear(1.2),
+          ),
+        )
+      ],
+    );
+  }
+
+  
 }
