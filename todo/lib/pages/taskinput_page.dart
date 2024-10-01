@@ -106,7 +106,7 @@ class _TaskInputState extends State<TaskInput> {
               children: [
                 //* Task Title field
                 TextFormField(
-                  autofocus: true,
+                  autofocus:  widget.action == 'add' ? true : false,
                   controller: _titleController,
                   maxLength: 30,
                   decoration: const InputDecoration(
@@ -120,9 +120,6 @@ class _TaskInputState extends State<TaskInput> {
                     }
                     if (value.trim().isEmpty) {
                       return "Task cannot contain only spaces";
-                    }
-                    if (value.trim().length < 5) {
-                      return "Task must be atleast 5 characters long";
                     }
                     return null;
                   },

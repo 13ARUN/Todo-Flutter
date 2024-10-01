@@ -34,7 +34,6 @@ class TaskItem extends StatelessWidget {
               Navigator.pop(context);
               onDelete();
             },
-            
             child: const Text('Delete'),
           ),
         ],
@@ -47,26 +46,21 @@ class TaskItem extends StatelessWidget {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
 
     return ListTile(
-      // onTap: () {
-      //   showDialog(
-      //     context: context,
-      //     builder: (context) {
-      //       return Dialog(
-      //         child: SizedBox(
-      //           height: 200,
-      //           child: Column(
-      //             mainAxisAlignment: MainAxisAlignment.center,
-      //             children: [
-      //               Text(task.title),
-      //               Text(task.description),
-      //               Text(task.date),
-      //             ],
-      //           ),
-      //         ),
-      //       );
-      //     },
-      //   );
-      // },
+      onTap: () async {
+        final editedTask = await Navigator.push<TaskModel>(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TaskInput(
+              action: 'edit',
+              task: task,
+            ),
+          ),
+        );
+
+        if (editedTask != null) {
+          onEdit(editedTask);
+        }
+      },
       title: Text(
         task.title,
         style: const TextStyle(
@@ -86,25 +80,6 @@ class TaskItem extends StatelessWidget {
               }
             },
           ),
-          if (!task.isCompleted)
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () async {
-                final editedTask = await Navigator.push<TaskModel>(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TaskInput(
-                      action: 'edit',
-                      task: task,
-                    ),
-                  ),
-                );
-
-                if (editedTask != null) {
-                  onEdit(editedTask);
-                }
-              },
-            ),
           IconButton(
             icon: const Icon(Icons.delete_rounded),
             onPressed: () => _showDeleteConfirmation(context),
