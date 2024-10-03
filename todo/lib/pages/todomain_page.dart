@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/taskinput_page.dart';
+import 'package:todo/services/database.dart';
 import 'package:todo/widgets/tasklist.dart';
 
 class TodoMainPage extends StatefulWidget {
@@ -11,8 +12,22 @@ class TodoMainPage extends StatefulWidget {
 }
 
 class _TodoMainPageState extends State<TodoMainPage> {
-  final List<TaskModel> _tasks = [];
+  final DBHelper _db = DBHelper();
+  List<TaskModel> _tasks = [];
   List<TaskModel> _deletedTasksBackup = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  Future<void> _loadTasks() async {
+  final tasks = await _db.getTasks();
+  setState(() {
+    _tasks = tasks;
+  });
+}
 
   //* Snackbar
   void _showSnackBar(String message, {SnackBarAction? action}) {
@@ -27,7 +42,8 @@ class _TodoMainPageState extends State<TodoMainPage> {
   }
 
   //* Add Task
-  void _addTask(TaskModel task) {
+  void _addTask(TaskModel task) async {
+    await _db.addTask(task);
     setState(() {
       _tasks.add(task);
     });
@@ -35,49 +51,54 @@ class _TodoMainPageState extends State<TodoMainPage> {
   }
 
   //* Delete Task
-  void _deleteTask(TaskModel task) {
+  void _deleteTask(TaskModel task) async {
+    _deletedTasksBackup.add(task);
+    await _db.deleteTask(task.id);
     final taskIndex = _tasks.indexOf(task);
     setState(() {
-      _tasks.remove(task);
+      _tasks.removeAt(taskIndex);
     });
+
     _showSnackBar(
       'Task Deleted',
       action: SnackBarAction(
         label: 'Undo',
-        onPressed: () {
+        onPressed: () async {
           setState(() {
             _tasks.insert(taskIndex, task);
           });
+          await _db.addTask(task);
         },
       ),
     );
   }
 
   //* Edit Task
-  void _editTask(TaskModel editedTask) {
+  void _editTask(TaskModel editedTask) async {
+    await _db.updateTask(editedTask);
     final taskIndex = _tasks.indexWhere((t) => t.id == editedTask.id);
-    if (taskIndex != -1) {
-      setState(() {
-        _tasks[taskIndex] = editedTask;
-      });
-      _showSnackBar('Task Updated');
-    } else {
-      _showSnackBar('Task not found');
-    }
+    setState(() {
+      _tasks[taskIndex] = editedTask;
+    });
+    _showSnackBar('Task Updated');
   }
 
   //* Toggle Status
-  void _toggleTaskCompletion(TaskModel task) {
+  void _toggleTaskCompletion(TaskModel task) async {
+    final updatedTask = TaskModel(
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      date: task.date,
+      isCompleted: !task.isCompleted,
+    );
+
+    await _db.updateTask(updatedTask);
+
     setState(() {
       final taskIndex = _tasks.indexWhere((t) => t.id == task.id);
       if (taskIndex != -1) {
-        _tasks[taskIndex] = TaskModel(
-          id: task.id,
-          title: task.title,
-          description: task.description,
-          date: task.date,
-          isCompleted: !_tasks[taskIndex].isCompleted,
-        );
+        _tasks[taskIndex] = updatedTask;
       }
     });
   }
@@ -116,8 +137,9 @@ class _TodoMainPageState extends State<TodoMainPage> {
   }
 
   //* Delete all Tasks
-  void _deleteAllTasks() {
+  void _deleteAllTasks() async {
     _deletedTasksBackup = List.from(_tasks);
+    await _db.deleteTasks();
     setState(() {
       _tasks.clear();
     });
@@ -126,21 +148,22 @@ class _TodoMainPageState extends State<TodoMainPage> {
       'All tasks deleted',
       action: SnackBarAction(
         label: 'Undo',
-        onPressed: () {
+        onPressed: () async {
           setState(() {
             _tasks.addAll(_deletedTasksBackup);
           });
+          for (var task in _deletedTasksBackup) {
+            await _db.addTask(task);
+          }
         },
       ),
     );
   }
 
   //* Delete completed Tasks
-  void _deleteCompletedTasks() {
-    final completedTasks = _tasks.where((task) => task.isCompleted).toList();
-
+  void _deleteCompletedTasks() async {
+    await _db.deleteTasks(completed: true);
     setState(() {
-      _deletedTasksBackup = List.from(completedTasks);
       _tasks.removeWhere((task) => task.isCompleted);
     });
 
@@ -206,11 +229,11 @@ class _TodoMainPageState extends State<TodoMainPage> {
         shape: const CircleBorder(eccentricity: 1),
         child: const Icon(Icons.add),
       ),
-      body: _tasks.isNotEmpty ? taksView() : noTaksView(),
+      body: _tasks.isNotEmpty ? tasksView() : noTasksView(),
     );
   }
 
-  Widget taksView() {
+  Widget tasksView() {
     return TaskList(
       tasklist: _tasks,
       onDeleteTask: _deleteTask,
@@ -219,7 +242,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
     );
   }
 
-  Widget noTaksView() {
+  Widget noTasksView() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -238,6 +261,4 @@ class _TodoMainPageState extends State<TodoMainPage> {
       ],
     );
   }
-
-  
 }

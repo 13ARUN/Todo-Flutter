@@ -46,7 +46,7 @@ class TaskItem extends StatelessWidget {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
 
     return ListTile(
-      onTap: () async {
+      onTap: task.isCompleted ? null : () async {
         final editedTask = await Navigator.push<TaskModel>(
           context,
           MaterialPageRoute(

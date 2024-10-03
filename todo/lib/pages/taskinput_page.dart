@@ -80,7 +80,7 @@ class _TaskInputState extends State<TaskInput> {
     final selectedDate = _dueDateController.text;
 
     final tasktoReturn = TaskModel(
-      id: widget.action == 'add' ? uuid.v4() : widget.task!.id,
+      id: widget.action == 'add' ? DateTime.now().toString() : widget.task!.id,
       title: enteredTitle,
       description: enteredDescription,
       date: selectedDate,
