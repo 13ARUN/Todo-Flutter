@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:todo/models/task_model.dart';
 import 'package:todo/widgets/taskitem.dart';
 
@@ -22,18 +21,22 @@ class TaskList extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: ListView.builder(
-        itemCount: tasklist.length,
-        itemBuilder: (context, index) => Container(
-          margin: const EdgeInsets.all(8),
-          child: TaskItem(
-            task: tasklist[index],
-            onDelete: () => onDeleteTask(tasklist[index]),
-            onEdit: (TaskModel editedTask) => onEditTask(editedTask),
-            onToggleComplete: () => onToggleCompleteTask(tasklist[index]),
-          ),
-        ),
+        itemCount: tasklist.length + 1,
+        itemBuilder: (context, index) {
+          if (index == tasklist.length) {
+            return const SizedBox(height: 65);
+          }
+          return Container(
+            margin: const EdgeInsets.all(8),
+            child: TaskItem(
+              task: tasklist[index],
+              onDelete: () => onDeleteTask(tasklist[index]),
+              onEdit: (TaskModel editedTask) => onEditTask(editedTask),
+              onToggleComplete: () => onToggleCompleteTask(tasklist[index]),
+            ),
+          );
+        },
       ),
     );
   }
 }
-
