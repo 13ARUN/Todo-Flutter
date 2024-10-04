@@ -236,6 +236,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
         ),
       ],
       bottom: const TabBar(
+        
         tabs: [
           Tab(
             child: Text('All'),
@@ -301,7 +302,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(
-          height: 250,
+          height: 200,
           width: 200,
           child: Image.asset(imagePath),
         ),

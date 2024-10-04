@@ -21,6 +21,7 @@ class TaskList extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
         itemCount: tasklist.length + 1,
         itemBuilder: (context, index) {
           if (index == tasklist.length) {
