@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 var kColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color.fromARGB(255, 117, 58, 184),
+  seedColor: const Color.fromARGB(255, 108, 58, 184),
 );
 
 final ThemeData lightTheme = ThemeData().copyWith(
@@ -11,6 +11,16 @@ final ThemeData lightTheme = ThemeData().copyWith(
     backgroundColor: kColorScheme.onPrimaryFixed,
     foregroundColor: kColorScheme.primaryContainer,
     toolbarHeight: 65,
+  ),
+  tabBarTheme: TabBarTheme(
+    labelColor: kColorScheme.tertiaryContainer,
+    unselectedLabelColor: Colors.white,
+    indicator: UnderlineTabIndicator(
+      borderSide: BorderSide(
+        color: kColorScheme.tertiaryContainer,
+        width: 3,
+      ),
+    ),
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
     backgroundColor: kColorScheme.onPrimaryContainer,
@@ -82,6 +92,16 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
   appBarTheme: const AppBarTheme().copyWith(
     backgroundColor: kColorScheme.onPrimaryFixed,
     foregroundColor: kColorScheme.primaryContainer,
+  ),
+  tabBarTheme: TabBarTheme(
+    labelColor: kColorScheme.tertiaryContainer,
+    unselectedLabelColor: Colors.white,
+    indicator: UnderlineTabIndicator(
+      borderSide: BorderSide(
+        color: kColorScheme.tertiaryContainer,
+        width: 3,
+      ),
+    ),
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
     backgroundColor: kColorScheme.inversePrimary,

@@ -174,10 +174,26 @@ class _TodoMainPageState extends State<TodoMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(),
-      floatingActionButton: buildFloatingButton(context),
-      body: _tasks.isNotEmpty ? tasksView() : noTasksView(),
+    final inProgressTasks = _tasks.where((task) => !task.isCompleted).toList();
+    final completedTasks = _tasks.where((task) => task.isCompleted).toList();
+
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: buildAppBar(),
+        floatingActionButton: buildFloatingButton(context),
+        body: TabBarView(
+          children: [
+            _tasks.isNotEmpty ? tasksView(_tasks) : noTasksView(),
+            inProgressTasks.isNotEmpty
+                ? tasksView(inProgressTasks)
+                : noTasksView(),
+            completedTasks.isNotEmpty
+                ? tasksView(completedTasks)
+                : noTasksView(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -219,6 +235,19 @@ class _TodoMainPageState extends State<TodoMainPage> {
           ],
         ),
       ],
+      bottom: const TabBar(
+        tabs: [
+          Tab(
+            child: Text('All'),
+          ),
+          Tab(
+            child: Text('In Progress'),
+          ),
+          Tab(
+            child: Text('Completed'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -241,9 +270,9 @@ class _TodoMainPageState extends State<TodoMainPage> {
     );
   }
 
-  Widget tasksView() {
+  Widget tasksView(List<TaskModel> tasks) {
     return TaskList(
-      tasklist: _tasks,
+      tasklist: tasks,
       onDeleteTask: _deleteTask,
       onEditTask: _editTask,
       onToggleCompleteTask: _toggleTaskCompletion,
@@ -251,6 +280,22 @@ class _TodoMainPageState extends State<TodoMainPage> {
   }
 
   Widget noTasksView() {
+    final inProgressTasks = _tasks.where((task) => !task.isCompleted).toList();
+    final isEmpty = _tasks.isEmpty;
+    final isInProgressEmpty = inProgressTasks.isEmpty;
+
+    String imagePath = isEmpty
+        ? 'assets/images/notask.png'
+        : isInProgressEmpty
+            ? 'assets/images/noInprogress.png'
+            : 'assets/images/noCompleted.png';
+
+    String message = isEmpty
+        ? "Click on the + icon to create a new task!"
+        : isInProgressEmpty
+            ? "You have no tasks in progress!"
+            : "You haven't completed any tasks!";
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -258,14 +303,14 @@ class _TodoMainPageState extends State<TodoMainPage> {
         SizedBox(
           height: 250,
           width: 200,
-          child: Image.asset('assets/images/notask.png'),
+          child: Image.asset(imagePath),
         ),
-        const Center(
+        Center(
           child: Text(
-            "Click on + icon to create a new task!",
-            textScaler: TextScaler.linear(1.2),
+            message,
+            textScaler: const TextScaler.linear(1.2),
           ),
-        )
+        ),
       ],
     );
   }
