@@ -266,7 +266,6 @@ class _TodoMainPageState extends State<TodoMainPage> {
           _addTask(newTask);
         }
       },
-      shape: const CircleBorder(eccentricity: 1),
       child: const Icon(Icons.add),
     );
   }

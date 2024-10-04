@@ -67,7 +67,7 @@ class TaskItem extends StatelessWidget {
           fontSize: 20,
         ),
       ),
-      subtitle: Text('Due: ${task.date}'),
+      subtitle: Text(task.date),
       // subtitle: task.isCompleted ? null : Text('Due: ${task.date}'),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

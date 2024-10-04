@@ -24,6 +24,7 @@ final ThemeData lightTheme = ThemeData().copyWith(
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
     backgroundColor: kColorScheme.onPrimaryContainer,
+    foregroundColor: kColorScheme.primaryContainer,
   ),
   checkboxTheme: const CheckboxThemeData().copyWith(
     fillColor: WidgetStatePropertyAll(kColorScheme.primaryFixedDim),
@@ -31,9 +32,9 @@ final ThemeData lightTheme = ThemeData().copyWith(
     side: BorderSide(color: kColorScheme.onPrimaryContainer, width: 2),
   ),
   snackBarTheme: const SnackBarThemeData().copyWith(
-    backgroundColor: kColorScheme.primaryFixedDim,
-    contentTextStyle: TextStyle(color: kColorScheme.onPrimaryContainer),
-    actionTextColor: kColorScheme.onSurface,
+    backgroundColor: kColorScheme.inverseSurface,
+    contentTextStyle: TextStyle(color: kColorScheme.onInverseSurface),
+    actionTextColor: kColorScheme.inversePrimary,
   ),
   listTileTheme: const ListTileThemeData().copyWith(
     iconColor: kColorScheme.onPrimaryContainer,
@@ -102,9 +103,11 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
         width: 3,
       ),
     ),
+    dividerColor: kColorScheme.inverseSurface
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
     backgroundColor: kColorScheme.inversePrimary,
+    foregroundColor: kColorScheme.onPrimaryContainer,
   ),
   listTileTheme: const ListTileThemeData().copyWith(
     iconColor: kColorScheme.inversePrimary,
@@ -136,9 +139,9 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
     labelStyle: TextStyle(color: kColorScheme.surfaceContainerLow),
   ),
   snackBarTheme: const SnackBarThemeData().copyWith(
-    backgroundColor: kColorScheme.onPrimaryFixedVariant,
-    contentTextStyle: TextStyle(color: kColorScheme.surfaceBright),
-    actionTextColor: kColorScheme.surfaceContainerLowest,
+    backgroundColor: kColorScheme.inverseSurface,
+    contentTextStyle: TextStyle(color: kColorScheme.onInverseSurface),
+    actionTextColor: kColorScheme.inversePrimary,
   ),
   filledButtonTheme: FilledButtonThemeData(
     style: ButtonStyle(
