@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo/models/task_model.dart';
-import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
-
-const uuid = Uuid();
+import 'package:todo/models/task_model.dart';
 
 class TaskInput extends StatefulWidget {
   const TaskInput({
@@ -106,13 +103,14 @@ class _TaskInputState extends State<TaskInput> {
               children: [
                 //* Task Title field
                 TextFormField(
-                  autofocus:  widget.action == 'add' ? true : false,
+                  autofocus: widget.action == 'add' ? true : false,
                   controller: _titleController,
                   maxLength: 30,
                   decoration: const InputDecoration(
                     labelText: 'Title',
                     hintText: 'Enter Task Title',
                     filled: true,
+                    suffixIcon: Icon(Icons.task_outlined),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -138,6 +136,7 @@ class _TaskInputState extends State<TaskInput> {
                     labelText: 'Description',
                     hintText: 'Enter Task Description',
                     filled: true,
+                    suffixIcon: Icon(Icons.description_outlined),
                   ),
                 ),
                 const SizedBox(

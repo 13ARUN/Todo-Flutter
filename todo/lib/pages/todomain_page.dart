@@ -12,7 +12,7 @@ class TodoMainPage extends StatefulWidget {
 }
 
 class _TodoMainPageState extends State<TodoMainPage> {
-  final DBHelper _db = DBHelper();
+  final DataBase _db = DataBase();
   List<TaskModel> _tasks = [];
   List<TaskModel> _deletedTasksBackup = [];
 
@@ -23,11 +23,11 @@ class _TodoMainPageState extends State<TodoMainPage> {
   }
 
   Future<void> _loadTasks() async {
-  final tasks = await _db.getTasks();
-  setState(() {
-    _tasks = tasks;
-  });
-}
+    final tasks = await _db.getTasks();
+    setState(() {
+      _tasks = tasks;
+    });
+  }
 
   //* Snackbar
   void _showSnackBar(String message, {SnackBarAction? action}) {
@@ -175,61 +175,69 @@ class _TodoMainPageState extends State<TodoMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Task Manager'),
-        titleSpacing: 25,
-        actions: [
-          PopupMenuButton(
-            position: PopupMenuPosition.under,
-            itemBuilder: (context) => <PopupMenuItem>[
+      appBar: buildAppBar(),
+      floatingActionButton: buildFloatingButton(context),
+      body: _tasks.isNotEmpty ? tasksView() : noTasksView(),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      title: const Text('Task Manager'),
+      titleSpacing: 25,
+      actions: [
+        PopupMenuButton(
+          position: PopupMenuPosition.under,
+          itemBuilder: (context) => <PopupMenuItem>[
+            PopupMenuItem(
+              child: ListTile(
+                leading: const Icon(Icons.settings),
+                title: const Text('Settings'),
+                onTap: () {},
+              ),
+            ),
+            if (_tasks.isNotEmpty)
               PopupMenuItem(
                 child: ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: const Text('Settings'),
-                  onTap: () {},
+                  leading: const Icon(Icons.delete),
+                  title: const Text('Delete all'),
+                  onTap: () {
+                    _confirmDelete('all');
+                  },
                 ),
               ),
-              if (_tasks.isNotEmpty)
-                PopupMenuItem(
-                  child: ListTile(
-                    leading: const Icon(Icons.delete),
-                    title: const Text('Delete all'),
-                    onTap: () {
-                      _confirmDelete('all');
-                    },
-                  ),
+            if (_tasks.any((task) => task.isCompleted))
+              PopupMenuItem(
+                child: ListTile(
+                  leading: const Icon(Icons.delete_sweep_rounded),
+                  title: const Text('Delete completed'),
+                  onTap: () {
+                    _confirmDelete('completed');
+                  },
                 ),
-              if (_tasks.any((task) => task.isCompleted))
-                PopupMenuItem(
-                  child: ListTile(
-                    leading: const Icon(Icons.delete_sweep_rounded),
-                    title: const Text('Delete completed'),
-                    onTap: () {
-                      _confirmDelete('completed');
-                    },
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final newTask = await Navigator.push<TaskModel>(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const TaskInput(action: 'add'),
-            ),
-          );
+              ),
+          ],
+        ),
+      ],
+    );
+  }
 
-          if (newTask != null) {
-            _addTask(newTask);
-          }
-        },
-        shape: const CircleBorder(eccentricity: 1),
-        child: const Icon(Icons.add),
-      ),
-      body: _tasks.isNotEmpty ? tasksView() : noTasksView(),
+  FloatingActionButton buildFloatingButton(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () async {
+        final newTask = await Navigator.push<TaskModel>(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const TaskInput(action: 'add'),
+          ),
+        );
+
+        if (newTask != null) {
+          _addTask(newTask);
+        }
+      },
+      shape: const CircleBorder(eccentricity: 1),
+      child: const Icon(Icons.add),
     );
   }
 

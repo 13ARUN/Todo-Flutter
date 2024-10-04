@@ -2,8 +2,8 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:todo/models/task_model.dart';
 
-class DBHelper {
-  static final DBHelper _instance = DBHelper._init();
+class DataBase {
+  static final DataBase _instance = DataBase._init();
   static Database? _database;
 
   static const String _tableName = 'tasks';
@@ -13,17 +13,18 @@ class DBHelper {
   static const String _columnDate = 'date';
   static const String _columnIsCompleted = 'isCompleted';
 
-  DBHelper._init();
+  DataBase._init();
 
-  factory DBHelper() => _instance;
+  factory DataBase() => _instance;
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('tasks.db');
+    _database = await _initializeDB('tasks.db');
     return _database!;
   }
 
-  Future<Database> _initDB(String filePath) async {
+  //* Initialize DataBase
+  Future<Database> _initializeDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
     return await openDatabase(
@@ -33,6 +34,7 @@ class DBHelper {
     );
   }
 
+  //* Create DataBase
   Future _createDB(Database db, int version) async {
     await db.execute('''
     CREATE TABLE $_tableName(
@@ -82,6 +84,7 @@ class DBHelper {
     }
   }
 
+  //* Close DataBase
   Future<void> close() async {
     final db = await database;
     await db.close();
