@@ -96,98 +96,100 @@ class _TaskInputState extends State<TaskInput> {
           widget.action == "add" ? "Add a new task" : "Update task",
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-          child: Form(
-            key: _formGlobalKey,
-            child: Column(
-              children: [
-                //* Task Title field
-                TextFormField(
-                  autofocus: widget.action == 'add' ? true : false,
-                  controller: _titleController,
-                  maxLength: 30,
-                  decoration: const InputDecoration(
-                    labelText: 'Title',
-                    hintText: 'Enter Task Title',
-                    filled: true,
-                    suffixIcon: Icon(Icons.task_outlined),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+            child: Form(
+              key: _formGlobalKey,
+              child: Column(
+                children: [
+                  //* Task Title field
+                  TextFormField(
+                    autofocus: widget.action == 'add' ? true : false,
+                    controller: _titleController,
+                    maxLength: 30,
+                    decoration: const InputDecoration(
+                      labelText: 'Title',
+                      hintText: 'Enter Task Title',
+                      filled: true,
+                      suffixIcon: Icon(Icons.task_outlined),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Enter a task title";
+                      }
+                      if (value.trim().isEmpty) {
+                        return "Task cannot contain only spaces";
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter a task title";
-                    }
-                    if (value.trim().isEmpty) {
-                      return "Task cannot contain only spaces";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                //* Task Description field
-                TextFormField(
-                  controller: _descriptionController,
-                  minLines: 1,
-                  maxLines: 3,
-                  maxLength: 120,
-                  keyboardType: TextInputType.multiline,
-                  decoration: const InputDecoration(
-                    labelText: 'Description',
-                    hintText: 'Enter Task Description',
-                    filled: true,
-                    suffixIcon: Icon(Icons.description_outlined),
+                  const SizedBox(
+                    height: 15,
                   ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                //* Task Due Date field
-                TextFormField(
-                  controller: _dueDateController,
-                  readOnly: true,
-                  decoration: const InputDecoration(
-                    label: Text('Due Date'),
-                    hintText: 'Enter Task Description',
-                    filled: true,
-                    suffixIcon: Icon(
-                      Icons.calendar_month,
+                  //* Task Description field
+                  TextFormField(
+                    controller: _descriptionController,
+                    minLines: 1,
+                    maxLines: 3,
+                    maxLength: 120,
+                    keyboardType: TextInputType.multiline,
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                      hintText: 'Enter Task Description',
+                      filled: true,
+                      suffixIcon: Icon(Icons.description_outlined),
                     ),
                   ),
-                  onTap: _selectDate,
-                ),
-                const SizedBox(
-                  height: 25,
-                ),
-                //* Task Form Buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Cancel'),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  //* Task Due Date field
+                  TextFormField(
+                    controller: _dueDateController,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                      label: Text('Due Date'),
+                      hintText: 'Enter Task Description',
+                      filled: true,
+                      suffixIcon: Icon(
+                        Icons.calendar_month,
                       ),
                     ),
-                    const SizedBox(
-                      width: 25,
-                    ),
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: () {
-                          if (_formGlobalKey.currentState!.validate()) {
-                            _submitTaskData();
-                          }
-                        },
-                        child: Text(widget.action == 'add' ? 'Add' : 'Update'),
+                    onTap: _selectDate,
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  //* Task Form Buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FilledButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel'),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(
+                        width: 25,
+                      ),
+                      Expanded(
+                        child: FilledButton(
+                          onPressed: () {
+                            if (_formGlobalKey.currentState!.validate()) {
+                              _submitTaskData();
+                            }
+                          },
+                          child: Text(widget.action == 'add' ? 'Add' : 'Update'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

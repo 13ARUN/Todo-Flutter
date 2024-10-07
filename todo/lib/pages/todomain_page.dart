@@ -200,16 +200,18 @@ class _TodoMainPageState extends State<TodoMainPage> {
       child: Scaffold(
         appBar: buildAppBar(),
         floatingActionButton: buildFloatingButton(context),
-        body: TabBarView(
-          children: [
-            _tasks.isNotEmpty ? tasksView(_tasks) : noTasksView(),
-            inProgressTasks.isNotEmpty
-                ? tasksView(inProgressTasks)
-                : noTasksView(),
-            completedTasks.isNotEmpty
-                ? tasksView(completedTasks)
-                : noTasksView(),
-          ],
+        body: SafeArea(
+          child: TabBarView(
+            children: [
+              _tasks.isNotEmpty ? tasksView(_tasks) : noTasksView(),
+              inProgressTasks.isNotEmpty
+                  ? tasksView(inProgressTasks)
+                  : noTasksView(),
+              completedTasks.isNotEmpty
+                  ? tasksView(completedTasks)
+                  : noTasksView(),
+            ],
+          ),
         ),
       ),
     );
