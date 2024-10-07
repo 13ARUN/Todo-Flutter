@@ -54,6 +54,8 @@ class DataBase {
     return result.map((json) => TaskModel.fromMap(json)).toList();
   }
 
+  
+
   //* Add Task to DB
   Future<void> addTask(TaskModel task) async {
     final db = await database;
