@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/taskinput_page.dart';
@@ -18,27 +20,53 @@ class TaskItem extends StatelessWidget {
   final void Function() onToggleComplete;
 
   Future<void> _showDeleteConfirmation(BuildContext context) async {
-    showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Delete Task'),
-        content:
-            Text("Are you sure you want to delete the task?  '${task.title}'"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              onDelete();
-            },
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
+    if (Platform.isIOS) {
+      showCupertinoDialog<bool>(
+        context: context,
+        builder: (ctx) => CupertinoAlertDialog(
+          title: const Text('Delete Task'),
+          content: Text(
+              "Are you sure you want to delete the task?  '${task.title}'"),
+          actions: [
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            CupertinoDialogAction(
+              isDestructiveAction: true,
+              onPressed: () {
+                Navigator.pop(context);
+                onDelete();
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Delete Task'),
+          content: Text(
+              "Are you sure you want to delete the task?  '${task.title}'"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                onDelete();
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -70,7 +98,6 @@ class TaskItem extends StatelessWidget {
         ),
       ),
       subtitle: Text(task.date),
-      // subtitle: task.isCompleted ? null : Text('Due: ${task.date}'),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
