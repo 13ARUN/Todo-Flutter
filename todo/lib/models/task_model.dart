@@ -23,7 +23,7 @@ class TaskModel {
     };
   }
 
-  static TaskModel fromMap(Map<String, dynamic> map) {
+  factory TaskModel.fromMap(Map<String, dynamic> map) {
     return TaskModel(
       id: map['id'],
       title: map['title'],

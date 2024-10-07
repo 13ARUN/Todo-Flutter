@@ -37,13 +37,13 @@ class DataBase {
   //* Create DataBase
   Future _createDB(Database db, int version) async {
     await db.execute('''
-    CREATE TABLE $_tableName(
-      $_columnId TEXT PRIMARY KEY,
-      $_columnTitle TEXT,
-      $_columnDescription TEXT,
-      $_columnDate TEXT,
-      $_columnIsCompleted INTEGER
-    )
+      CREATE TABLE $_tableName(
+        $_columnId TEXT PRIMARY KEY,
+        $_columnTitle TEXT,
+        $_columnDescription TEXT,
+        $_columnDate TEXT,
+        $_columnIsCompleted INTEGER
+      )
     ''');
   }
 

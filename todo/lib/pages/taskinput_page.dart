@@ -38,14 +38,15 @@ class _TaskInputState extends State<TaskInput> {
   }
 
   void _initialData() {
-    if (widget.action == 'edit' && widget.task != null) {
-      _titleController.text = widget.task!.title;
-      _descriptionController.text = widget.task!.description;
-      _dueDateController.text = widget.task!.date;
-    } else {
-      _dueDateController.text = _formatDate(DateTime.now());
-    }
+  if (widget.action == 'edit' && widget.task != null) {
+    final task = widget.task!;
+    _titleController.text = task.title;
+    _descriptionController.text = task.description;
+    _dueDateController.text = task.date;
+  } else {
+    _dueDateController.text = _formatDate(DateTime.now());
   }
+}
 
   //* Date Formatter
   String _formatDate(DateTime date) {

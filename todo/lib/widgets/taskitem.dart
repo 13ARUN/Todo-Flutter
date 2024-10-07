@@ -46,21 +46,23 @@ class TaskItem extends StatelessWidget {
     Brightness brightness = MediaQuery.of(context).platformBrightness;
 
     return ListTile(
-      onTap: task.isCompleted ? null : () async {
-        final editedTask = await Navigator.push<TaskModel>(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TaskInput(
-              action: 'edit',
-              task: task,
-            ),
-          ),
-        );
+      onTap: task.isCompleted
+          ? null
+          : () async {
+              final editedTask = await Navigator.push<TaskModel>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TaskInput(
+                    action: 'edit',
+                    task: task,
+                  ),
+                ),
+              );
 
-        if (editedTask != null) {
-          onEdit(editedTask);
-        }
-      },
+              if (editedTask != null) {
+                onEdit(editedTask);
+              }
+            },
       title: Text(
         task.title,
         style: const TextStyle(
@@ -86,6 +88,7 @@ class TaskItem extends StatelessWidget {
           ),
         ],
       ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),

@@ -22,6 +22,12 @@ class _TodoMainPageState extends State<TodoMainPage> {
     _loadTasks();
   }
 
+  @override
+  void dispose() {
+    _db.close();
+    super.dispose();
+  }
+
   Future<void> _loadTasks() async {
     final tasks = await _db.getTasks();
     setState(() {
@@ -43,64 +49,73 @@ class _TodoMainPageState extends State<TodoMainPage> {
 
   //* Add Task
   void _addTask(TaskModel task) async {
-    await _db.addTask(task);
-    setState(() {
-      _tasks.add(task);
-    });
-    _showSnackBar('${task.title} added!');
+    try {
+      await _db.addTask(task);
+      await _loadTasks();
+      _showSnackBar('${task.title} added!');
+    } catch (e) {
+      _showSnackBar('Failed to add task');
+    }
   }
 
   //* Delete Task
   void _deleteTask(TaskModel task) async {
-    _deletedTasksBackup.add(task);
-    await _db.deleteTask(task.id);
-    final taskIndex = _tasks.indexOf(task);
-    setState(() {
-      _tasks.removeAt(taskIndex);
-    });
+    try {
+      await _db.deleteTask(task.id);
+      await _loadTasks();
 
-    _showSnackBar(
-      'Task Deleted',
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () async {
-          setState(() {
-            _tasks.insert(taskIndex, task);
-          });
-          await _db.addTask(task);
-        },
-      ),
-    );
+      _showSnackBar(
+        'Task Deleted',
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () async {
+            try {
+              await _db.addTask(task);
+              _loadTasks();
+            } catch (e) {
+              _showSnackBar('Failed to undo task deletion');
+            }
+          },
+        ),
+      );
+    } catch (e) {
+      _showSnackBar('Failed to delete task');
+    }
   }
 
   //* Edit Task
   void _editTask(TaskModel editedTask) async {
-    await _db.updateTask(editedTask);
-    final taskIndex = _tasks.indexWhere((t) => t.id == editedTask.id);
-    setState(() {
-      _tasks[taskIndex] = editedTask;
-    });
-    _showSnackBar('Task Updated');
+    try {
+      await _db.updateTask(editedTask);
+      await _loadTasks();
+      _showSnackBar('Task Updated');
+    } catch (e) {
+      _showSnackBar('Failed to update task');
+    }
   }
 
   //* Toggle Status
   void _toggleTaskCompletion(TaskModel task) async {
-    final updatedTask = TaskModel(
-      id: task.id,
-      title: task.title,
-      description: task.description,
-      date: task.date,
-      isCompleted: !task.isCompleted,
-    );
+    try {
+      final updatedTask = TaskModel(
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        date: task.date,
+        isCompleted: !task.isCompleted,
+      );
 
-    await _db.updateTask(updatedTask);
+      await _db.updateTask(updatedTask);
 
-    setState(() {
-      final taskIndex = _tasks.indexWhere((t) => t.id == task.id);
-      if (taskIndex != -1) {
-        _tasks[taskIndex] = updatedTask;
-      }
-    });
+      setState(() {
+        final taskIndex = _tasks.indexWhere((t) => t.id == task.id);
+        if (taskIndex != -1) {
+          _tasks[taskIndex] = updatedTask;
+        }
+      });
+    } catch (e) {
+      _showSnackBar('Failed to update task status');
+    }
   }
 
   //* Delete all Tasks Confirmation
@@ -138,38 +153,42 @@ class _TodoMainPageState extends State<TodoMainPage> {
 
   //* Delete all Tasks
   void _deleteAllTasks() async {
-    _deletedTasksBackup = List.from(_tasks);
-    await _db.deleteTasks();
-    setState(() {
-      _tasks.clear();
-    });
+    try {
+      _deletedTasksBackup = List.from(_tasks);
+      await _db.deleteTasks();
+      await _loadTasks();
 
-    _showSnackBar(
-      'All tasks deleted',
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () async {
-          setState(() {
-            _tasks.addAll(_deletedTasksBackup);
-          });
-          for (var task in _deletedTasksBackup) {
-            await _db.addTask(task);
-          }
-        },
-      ),
-    );
+      _showSnackBar(
+        'All tasks deleted',
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () async {
+            try {
+              for (var task in _deletedTasksBackup) {
+                await _db.addTask(task);
+              }
+              await _loadTasks();
+              _showSnackBar('Tasks restored');
+            } catch (e) {
+              _showSnackBar('Failed to restore tasks');
+            }
+          },
+        ),
+      );
+    } catch (e) {
+      _showSnackBar('Failed to delete all tasks');
+    }
   }
 
   //* Delete completed Tasks
   void _deleteCompletedTasks() async {
-    await _db.deleteTasks(completed: true);
-    setState(() {
-      _tasks.removeWhere((task) => task.isCompleted);
-    });
-
-    _showSnackBar(
-      'Completed tasks deleted',
-    );
+    try {
+      await _db.deleteTasks(completed: true);
+      await _loadTasks();
+      _showSnackBar('Completed tasks deleted');
+    } catch (e) {
+      _showSnackBar('Failed to delete completed tasks');
+    }
   }
 
   @override
@@ -236,17 +255,10 @@ class _TodoMainPageState extends State<TodoMainPage> {
         ),
       ],
       bottom: const TabBar(
-        
         tabs: [
-          Tab(
-            child: Text('All'),
-          ),
-          Tab(
-            child: Text('In Progress'),
-          ),
-          Tab(
-            child: Text('Completed'),
-          ),
+          Tab(icon: Icon(Icons.list_sharp), text: 'All Tasks'),
+          Tab(icon: Icon(Icons.watch_later_outlined), text: 'In Progress'),
+          Tab(icon: Icon(Icons.done), text: 'Completed'),
         ],
       ),
     );
@@ -280,21 +292,23 @@ class _TodoMainPageState extends State<TodoMainPage> {
   }
 
   Widget noTasksView() {
-    final inProgressTasks = _tasks.where((task) => !task.isCompleted).toList();
     final isEmpty = _tasks.isEmpty;
+    final inProgressTasks = _tasks.where((task) => !task.isCompleted).toList();
     final isInProgressEmpty = inProgressTasks.isEmpty;
 
-    String imagePath = isEmpty
-        ? 'assets/images/notask.png'
-        : isInProgressEmpty
-            ? 'assets/images/noInprogress.png'
-            : 'assets/images/noCompleted.png';
+    String imageName;
+    String message;
 
-    String message = isEmpty
-        ? "Click on the + icon to create a new task!"
-        : isInProgressEmpty
-            ? "You have no tasks in progress!"
-            : "You haven't completed any tasks!";
+    if (isEmpty) {
+      imageName = 'notask';
+      message = "Click on the + icon to create a new task!";
+    } else if (isInProgressEmpty) {
+      imageName = 'noInprogress';
+      message = "You have no tasks in progress!";
+    } else {
+      imageName = 'noCompleted';
+      message = "You haven't completed any tasks!";
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -303,7 +317,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
         SizedBox(
           height: 200,
           width: 200,
-          child: Image.asset(imagePath),
+          child: Image.asset('assets/images/$imageName.png'),
         ),
         Center(
           child: Text(
