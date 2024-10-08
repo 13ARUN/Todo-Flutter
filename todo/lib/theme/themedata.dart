@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 var kColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromARGB(255, 108, 58, 184),
 );
 
 final ThemeData lightTheme = ThemeData().copyWith(
+  textTheme: GoogleFonts.poppinsTextTheme(),
   colorScheme: const ColorScheme.light(),
   brightness: Brightness.light,
   appBarTheme: const AppBarTheme().copyWith(
@@ -88,6 +90,7 @@ final ThemeData lightTheme = ThemeData().copyWith(
 );
 
 final ThemeData darkTheme = ThemeData.dark().copyWith(
+  textTheme: GoogleFonts.poppinsTextTheme(const TextTheme()),
   colorScheme: const ColorScheme.dark(),
   brightness: Brightness.dark,
   appBarTheme: const AppBarTheme().copyWith(
@@ -95,16 +98,15 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
     foregroundColor: kColorScheme.primaryContainer,
   ),
   tabBarTheme: TabBarTheme(
-    labelColor: kColorScheme.tertiaryContainer,
-    unselectedLabelColor: Colors.white,
-    indicator: UnderlineTabIndicator(
-      borderSide: BorderSide(
-        color: kColorScheme.tertiaryContainer,
-        width: 3,
+      labelColor: kColorScheme.tertiaryContainer,
+      unselectedLabelColor: Colors.white,
+      indicator: UnderlineTabIndicator(
+        borderSide: BorderSide(
+          color: kColorScheme.tertiaryContainer,
+          width: 3,
+        ),
       ),
-    ),
-    dividerColor: kColorScheme.inverseSurface
-  ),
+      dividerColor: kColorScheme.inverseSurface),
   floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
     backgroundColor: kColorScheme.inversePrimary,
     foregroundColor: kColorScheme.onPrimaryContainer,

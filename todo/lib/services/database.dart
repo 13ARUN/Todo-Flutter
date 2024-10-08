@@ -51,7 +51,7 @@ class DataBase {
   Future<List<TaskModel>> getTasks({String orderBy = _columnId}) async {
     final db = await database;
     final result = await db.query(_tableName, orderBy: '$orderBy ASC');
-    return result.map((json) => TaskModel.fromMap(json)).toList();
+    return result.map((map) => TaskModel.fromMap(map)).toList();
   }
 
   
