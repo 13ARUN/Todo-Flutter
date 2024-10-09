@@ -121,10 +121,10 @@ class TaskItem extends StatelessWidget {
       ),
       tileColor: task.isCompleted
           ? brightness == Brightness.dark
-              ? kColorScheme.onSurface
-              : kColorScheme.surfaceContainerHighest
+              ? kDarkColorScheme.surfaceContainerLow
+              : kColorScheme.surfaceContainerHigh
           : brightness == Brightness.dark
-              ? kColorScheme.onPrimaryFixedVariant
+              ? kDarkColorScheme.onPrimaryFixedVariant
               : kColorScheme.primaryFixedDim,
     );
   }
