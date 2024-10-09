@@ -37,17 +37,16 @@ class _TaskInputState extends State<TaskInput> {
     super.dispose();
   }
 
-
   void _initialData() {
-  if (widget.action == 'edit' && widget.task != null) {
-    final task = widget.task!;
-    _titleController.text = task.title;
-    _descriptionController.text = task.description;
-    _dueDateController.text = task.date;
-  } else {
-    _dueDateController.text = _formatDate(DateTime.now());
+    if (widget.action == 'edit' && widget.task != null) {
+      final task = widget.task!;
+      _titleController.text = task.title;
+      _descriptionController.text = task.description;
+      _dueDateController.text = task.date;
+    } else {
+      _dueDateController.text = _formatDate(DateTime.now());
+    }
   }
-}
 
   //* Date Formatter
   String _formatDate(DateTime date) {
@@ -112,7 +111,6 @@ class _TaskInputState extends State<TaskInput> {
                     decoration: const InputDecoration(
                       labelText: 'Title',
                       hintText: 'Enter Task Title',
-                      filled: true,
                       suffixIcon: Icon(Icons.task_outlined),
                     ),
                     validator: (value) {
@@ -138,7 +136,6 @@ class _TaskInputState extends State<TaskInput> {
                     decoration: const InputDecoration(
                       labelText: 'Description',
                       hintText: 'Enter Task Description',
-                      filled: true,
                       suffixIcon: Icon(Icons.description_outlined),
                     ),
                   ),
@@ -152,7 +149,6 @@ class _TaskInputState extends State<TaskInput> {
                     decoration: const InputDecoration(
                       label: Text('Due Date'),
                       hintText: 'Enter Task Description',
-                      filled: true,
                       suffixIcon: Icon(
                         Icons.calendar_month,
                       ),
@@ -183,7 +179,8 @@ class _TaskInputState extends State<TaskInput> {
                               _submitTaskData();
                             }
                           },
-                          child: Text(widget.action == 'add' ? 'Add' : 'Update'),
+                          child:
+                              Text(widget.action == 'add' ? 'Add' : 'Update'),
                         ),
                       ),
                     ],
