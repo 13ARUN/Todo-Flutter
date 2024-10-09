@@ -28,10 +28,15 @@ class _TodoMainPageState extends State<TodoMainPage> {
   }
 
   Future<void> _loadTasks() async {
-    final tasks = await _db.getTasks();
-    setState(() {
-      _tasks = tasks;
-    });
+    try {
+      final tasks = await _db.getTasks();
+      setState(() {
+        _tasks = tasks;
+      });
+    } catch (e) {
+      _showSnackBar('Failed to load tasks');
+      debugPrint('Error: $e');
+    }
   }
 
   //* Snackbar
@@ -54,6 +59,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
       _showSnackBar('${task.title} added!');
     } catch (e) {
       _showSnackBar('Failed to add task');
+      debugPrint('Error: $e');
     }
   }
 
@@ -73,12 +79,14 @@ class _TodoMainPageState extends State<TodoMainPage> {
               _loadTasks();
             } catch (e) {
               _showSnackBar('Failed to undo task deletion');
+              debugPrint('Error: $e');
             }
           },
         ),
       );
     } catch (e) {
       _showSnackBar('Failed to delete task');
+      debugPrint('Error: $e');
     }
   }
 
@@ -90,6 +98,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
       _showSnackBar('Task Updated');
     } catch (e) {
       _showSnackBar('Failed to update task');
+      debugPrint('Error: $e');
     }
   }
 
@@ -114,6 +123,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
       });
     } catch (e) {
       _showSnackBar('Failed to update task status');
+      debugPrint('Error: $e');
     }
   }
 
@@ -170,12 +180,14 @@ class _TodoMainPageState extends State<TodoMainPage> {
               _showSnackBar('Tasks restored');
             } catch (e) {
               _showSnackBar('Failed to restore tasks');
+              debugPrint('Error: $e');
             }
           },
         ),
       );
     } catch (e) {
       _showSnackBar('Failed to delete all tasks');
+      debugPrint('Error: $e');
     }
   }
 
@@ -187,6 +199,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
       _showSnackBar('Completed tasks deleted');
     } catch (e) {
       _showSnackBar('Failed to delete completed tasks');
+      debugPrint('Error: $e');
     }
   }
 
@@ -202,6 +215,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
         floatingActionButton: buildFloatingButton(context),
         body: SafeArea(
           child: TabBarView(
+            physics: const BouncingScrollPhysics(),
             children: [
               _tasks.isNotEmpty ? tasksView(_tasks) : noTasksView(),
               inProgressTasks.isNotEmpty
@@ -218,6 +232,8 @@ class _TodoMainPageState extends State<TodoMainPage> {
   }
 
   AppBar buildAppBar() {
+    final width = MediaQuery.of(context).size.width;
+
     return AppBar(
       title: const Text('Task Manager'),
       titleSpacing: 25,
@@ -255,11 +271,17 @@ class _TodoMainPageState extends State<TodoMainPage> {
           ],
         ),
       ],
-      bottom: const TabBar(
+      bottom: TabBar(
         tabs: [
-          Tab(icon: Icon(Icons.list_sharp), text: 'All Tasks'),
-          Tab(icon: Icon(Icons.watch_later_outlined), text: 'In Progress'),
-          Tab(icon: Icon(Icons.done), text: 'Completed'),
+          Tab(
+              icon: width < 600 ? const Icon(Icons.list) : null,
+              text: 'All Tasks'),
+          Tab(
+              icon: width < 600 ? const Icon(Icons.watch_later_outlined) : null,
+              text: 'In Progress'),
+          Tab(
+              icon: width < 600 ? const Icon(Icons.done_all) : null,
+              text: 'Completed'),
         ],
       ),
     );
