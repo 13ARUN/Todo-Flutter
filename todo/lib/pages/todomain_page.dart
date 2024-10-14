@@ -15,6 +15,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
   final DataBase _db = DataBase();
   List<TaskModel> _tasks = [];
   List<TaskModel> _deletedTasksBackup = [];
+  
   @override
   void initState() {
     super.initState();
