@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
+import 'package:todo/pages/settings.dart';
 import 'package:todo/pages/taskinput_page.dart';
 import 'package:todo/services/database.dart';
 import 'package:todo/widgets/tasklist.dart';
@@ -15,7 +16,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
   final DataBase _db = DataBase();
   List<TaskModel> _tasks = [];
   List<TaskModel> _deletedTasksBackup = [];
-  
+
   @override
   void initState() {
     super.initState();
@@ -59,7 +60,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
       await _loadTasks();
       _showSnackBar('${task.title} added!');
     } catch (e) {
-      _showSnackBar('Failed to add task');
+      _showSnackBar('Unable to add the task. Please try again.');
       debugPrint('Error: $e');
     }
   }
@@ -79,14 +80,14 @@ class _TodoMainPageState extends State<TodoMainPage> {
               await _db.addTask(task);
               _loadTasks();
             } catch (e) {
-              _showSnackBar('Failed to undo task deletion');
+              _showSnackBar('Unable to undo task deletion. Please try again.');
               debugPrint('Error: $e');
             }
           },
         ),
       );
     } catch (e) {
-      _showSnackBar('Failed to delete task');
+      _showSnackBar('Unable to delete this task. Please try again.');
       debugPrint('Error: $e');
     }
   }
@@ -98,7 +99,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
       await _loadTasks();
       _showSnackBar('Task Updated');
     } catch (e) {
-      _showSnackBar('Failed to update task');
+      _showSnackBar('Unable to edit this task. Please try again.');
       debugPrint('Error: $e');
     }
   }
@@ -123,7 +124,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
         }
       });
     } catch (e) {
-      _showSnackBar('Failed to update task status');
+      _showSnackBar('Unable to change task status. Please try again.');
       debugPrint('Error: $e');
     }
   }
@@ -180,14 +181,15 @@ class _TodoMainPageState extends State<TodoMainPage> {
               await _loadTasks();
               _showSnackBar('Tasks restored');
             } catch (e) {
-              _showSnackBar('Failed to restore tasks');
+              _showSnackBar(
+                  'Unable to restore deleted tasks. Please try again.');
               debugPrint('Error: $e');
             }
           },
         ),
       );
     } catch (e) {
-      _showSnackBar('Failed to delete all tasks');
+      _showSnackBar('Unable to delete tasks. Please try again.');
       debugPrint('Error: $e');
     }
   }
@@ -199,7 +201,7 @@ class _TodoMainPageState extends State<TodoMainPage> {
       await _loadTasks();
       _showSnackBar('Completed tasks deleted');
     } catch (e) {
-      _showSnackBar('Failed to delete completed tasks');
+      _showSnackBar('Unable to delete completed tasks. Please try again.');
       debugPrint('Error: $e');
     }
   }
@@ -246,7 +248,14 @@ class _TodoMainPageState extends State<TodoMainPage> {
               child: ListTile(
                 leading: const Icon(Icons.settings),
                 title: const Text('Settings'),
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Settings(),
+                      ));
+                },
               ),
             ),
             if (_tasks.isNotEmpty)
