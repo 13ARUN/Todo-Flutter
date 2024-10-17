@@ -41,7 +41,7 @@ class _SettingsState extends State<Settings> {
               title: const Text('Theme'),
               subtitle: Text(_themeMode.name.toString()[0].toUpperCase() +
                   _themeMode.name.toString().substring(1)),
-              contentPadding: const EdgeInsets.all(0),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 15),
               onTap: () => showDialog(
                   context: context,
                   builder: (BuildContext context) {
