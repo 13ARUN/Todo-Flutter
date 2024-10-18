@@ -1,26 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo/providers/theme_provider.dart';
 
 enum ThemeModeOption { light, dark, system }
 
-class Settings extends StatefulWidget {
+class Settings extends ConsumerStatefulWidget {
   const Settings({super.key});
 
   @override
-  State<Settings> createState() => _SettingsState();
+  ConsumerState<Settings> createState() => _SettingsState();
 }
 
-class _SettingsState extends State<Settings> {
-  ThemeModeOption _themeMode = ThemeModeOption.system;
+class _SettingsState extends ConsumerState<Settings> {
+  late ThemeModeOption _themeMode;
 
-  ThemeMode _getThemeMode() {
-    switch (_themeMode) {
-      case ThemeModeOption.light:
-        return ThemeMode.light;
-      case ThemeModeOption.dark:
-        return ThemeMode.dark;
-      case ThemeModeOption.system:
+  @override
+  void initState() {
+    super.initState();
+    final themeMode = ref.read(themeProvider);
+    _themeMode = _getThemeModeOption(themeMode);
+  }
+
+  ThemeModeOption _getThemeModeOption(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.light:
+        return ThemeModeOption.light;
+      case ThemeMode.dark:
+        return ThemeModeOption.dark;
+      case ThemeMode.system:
       default:
-        return ThemeMode.system;
+        return ThemeModeOption.system;
     }
   }
 
@@ -43,53 +52,61 @@ class _SettingsState extends State<Settings> {
                   _themeMode.name.toString().substring(1)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 15),
               onTap: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Choose theme'),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          RadioListTile<ThemeModeOption>(
-                            title: const Text('Light Theme'),
-                            value: ThemeModeOption.light,
-                            groupValue: _themeMode,
-                            onChanged: (ThemeModeOption? value) {
-                              setState(() {
-                                _themeMode = value!;
-                                Navigator.pop(context);
-                              });
-                            },
-                          ),
-                          // Dark theme option
-                          RadioListTile<ThemeModeOption>(
-                            title: const Text('Dark Theme'),
-                            value: ThemeModeOption.dark,
-                            groupValue: _themeMode,
-                            onChanged: (ThemeModeOption? value) {
-                              setState(() {
-                                _themeMode = value!;
-                                Navigator.pop(context);
-                              });
-                            },
-                          ),
-                          // System default option
-                          RadioListTile<ThemeModeOption>(
-                            title: const Text('System Default'),
-                            value: ThemeModeOption.system,
-                            groupValue: _themeMode,
-                            onChanged: (ThemeModeOption? value) {
-                              setState(() {
-                                _themeMode = value!;
-                                Navigator.pop(context);
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-            )
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Choose theme'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RadioListTile<ThemeModeOption>(
+                          title: const Text('Light Theme'),
+                          value: ThemeModeOption.light,
+                          groupValue: _themeMode,
+                          onChanged: (ThemeModeOption? value) {
+                            setState(() {
+                              _themeMode = value!;
+                              ref
+                                  .read(themeProvider.notifier)
+                                  .setThemeMode(ThemeMode.light);
+                              Navigator.pop(context);
+                            });
+                          },
+                        ),
+                        RadioListTile<ThemeModeOption>(
+                          title: const Text('Dark Theme'),
+                          value: ThemeModeOption.dark,
+                          groupValue: _themeMode,
+                          onChanged: (ThemeModeOption? value) {
+                            setState(() {
+                              _themeMode = value!;
+                              ref
+                                  .read(themeProvider.notifier)
+                                  .setThemeMode(ThemeMode.dark);
+                              Navigator.pop(context);
+                            });
+                          },
+                        ),
+                        RadioListTile<ThemeModeOption>(
+                          title: const Text('System Default'),
+                          value: ThemeModeOption.system,
+                          groupValue: _themeMode,
+                          onChanged: (ThemeModeOption? value) {
+                            setState(() {
+                              _themeMode = value!;
+                              ref
+                                  .read(themeProvider.notifier)
+                                  .setThemeMode(ThemeMode.system);
+                              Navigator.pop(context);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

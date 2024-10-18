@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
@@ -71,7 +72,9 @@ class TaskItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Brightness brightness = MediaQuery.of(context).platformBrightness;
+    // Access the current theme mode via Theme.of(context)
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return ListTile(
       onTap: task.isCompleted
@@ -120,10 +123,10 @@ class TaskItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       tileColor: task.isCompleted
-          ? brightness == Brightness.dark
+          ? isDarkMode
               ? kDarkColorScheme.surfaceContainerLow
               : kColorScheme.surfaceContainerHigh
-          : brightness == Brightness.dark
+          : isDarkMode
               ? kDarkColorScheme.onPrimaryFixedVariant
               : kColorScheme.primaryFixedDim,
     );
