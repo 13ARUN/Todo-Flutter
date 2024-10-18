@@ -1,4 +1,4 @@
-part of 'todo_main_page.dart';
+part of '../todo_main_page.dart';
 
 Widget tasksView(List<TaskModel> tasks) {
   return TaskList(
@@ -33,7 +33,7 @@ Widget noTasksView(List<TaskModel> tasks) {
       Center(
         child: Text(
           message,
-          textScaleFactor: 1.2,
+          textScaler: const TextScaler.linear(1.2),
         ),
       ),
     ],

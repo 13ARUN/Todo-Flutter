@@ -4,11 +4,11 @@ import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/settings_page/settings.dart';
 import 'package:todo/pages/task_input/task_input.dart';
 import 'package:todo/services/providers/tasks_provider.dart';
-import 'package:todo/widgets/task_list.dart';
+import 'package:todo/pages/todo_main_page/taskview/task_list.dart';
 
 part 'app_bar.dart';
 part 'delete_dialog.dart';
-part 'task_view.dart';
+part 'taskview/task_view.dart';
 
 class TodoMainPage extends ConsumerWidget {
   const TodoMainPage({super.key});
