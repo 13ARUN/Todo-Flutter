@@ -2,25 +2,22 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/models/task_model.dart';
-import 'package:todo/pages/task_input_page.dart';
+import 'package:todo/pages/task_input/task_input.dart';
 import 'package:todo/theme/theme_data.dart';
+import 'package:todo/services/providers/tasks_provider.dart';
 
-class TaskItem extends StatelessWidget {
+class TaskItem extends ConsumerWidget {
   const TaskItem({
     super.key,
     required this.task,
-    required this.onDelete,
-    required this.onEdit,
-    required this.onToggleComplete,
   });
 
   final TaskModel task;
-  final void Function() onDelete;
-  final void Function(TaskModel editedTask) onEdit;
-  final void Function() onToggleComplete;
 
-  Future<void> _showDeleteConfirmation(BuildContext context) async {
+  Future<void> _showDeleteConfirmation(
+      BuildContext context, WidgetRef ref) async {
     if (Platform.isIOS) {
       showCupertinoDialog<bool>(
         context: context,
@@ -38,7 +35,7 @@ class TaskItem extends StatelessWidget {
               isDestructiveAction: true,
               onPressed: () {
                 Navigator.pop(context);
-                onDelete();
+                ref.read(tasksProvider.notifier).deleteTask(task.id);
               },
               child: const Text('Delete'),
             ),
@@ -60,7 +57,7 @@ class TaskItem extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                onDelete();
+                ref.read(tasksProvider.notifier).deleteTask(task.id);
               },
               child: const Text('Delete'),
             ),
@@ -71,8 +68,7 @@ class TaskItem extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Access the current theme mode via Theme.of(context)
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
@@ -91,7 +87,7 @@ class TaskItem extends StatelessWidget {
               );
 
               if (editedTask != null) {
-                onEdit(editedTask);
+                ref.read(tasksProvider.notifier).editTask(editedTask);
               }
             },
       title: Text(
@@ -108,13 +104,13 @@ class TaskItem extends StatelessWidget {
             value: task.isCompleted,
             onChanged: (value) {
               if (value != null) {
-                onToggleComplete();
+                ref.read(tasksProvider.notifier).toggleTaskCompletion(task);
               }
             },
           ),
           IconButton(
             icon: const Icon(Icons.delete_rounded),
-            onPressed: () => _showDeleteConfirmation(context),
+            onPressed: () => _showDeleteConfirmation(context, ref),
           ),
         ],
       ),

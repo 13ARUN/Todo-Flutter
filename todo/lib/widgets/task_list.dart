@@ -6,15 +6,9 @@ class TaskList extends StatelessWidget {
   const TaskList({
     super.key,
     required this.tasklist,
-    required this.onDeleteTask,
-    required this.onEditTask,
-    required this.onToggleCompleteTask,
   });
 
   final List<TaskModel> tasklist;
-  final void Function(TaskModel task) onDeleteTask;
-  final void Function(TaskModel task) onEditTask;
-  final void Function(TaskModel task) onToggleCompleteTask;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +25,6 @@ class TaskList extends StatelessWidget {
             margin: const EdgeInsets.all(8),
             child: TaskItem(
               task: tasklist[index],
-              onDelete: () => onDeleteTask(tasklist[index]),
-              onEdit: (TaskModel editedTask) => onEditTask(editedTask),
-              onToggleComplete: () => onToggleCompleteTask(tasklist[index]),
             ),
           );
         },
