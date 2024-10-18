@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/settings_page.dart';
 import 'package:todo/pages/task_input_page.dart';
-import 'package:todo/services/database.dart';
+import 'package:todo/services/database/database_helper.dart';
 import 'package:todo/widgets/task_list.dart';
 
 class TodoMainPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class TodoMainPage extends StatefulWidget {
 }
 
 class _TodoMainPageState extends State<TodoMainPage> {
-  final DataBase _db = DataBase();
+  final DatabaseHelper _db = DatabaseHelper();
   List<TaskModel> _tasks = [];
   List<TaskModel> _deletedTasksBackup = [];
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/pages/todo_main_page.dart';
 import 'package:todo/theme/theme_data.dart';
-import 'package:todo/providers/theme_provider.dart';
+import 'package:todo/services/providers/theme_provider.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));

@@ -18,8 +18,19 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
   Future<void> _loadThemeMode() async {
     final prefs = await SharedPreferences.getInstance();
     final themeIndex = prefs.getInt(themePrefKey) ?? ThemeMode.system.index;
-
     state = ThemeMode.values[themeIndex];
+  }
+
+  String get currentThemeOption {
+    switch (state) {
+      case ThemeMode.light:
+        return 'Light';
+      case ThemeMode.dark:
+        return 'Dark';
+      case ThemeMode.system:
+      default:
+        return 'System default';
+    }
   }
 }
 
