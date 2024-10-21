@@ -1,6 +1,7 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo/services/snackbar/snackbar_service.dart';
 
 class ThemeNotifier extends StateNotifier<ThemeMode> {
   static const String themePrefKey = 'theme_mode';
@@ -13,6 +14,7 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
     state = mode;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(themePrefKey, mode.index);
+    SnackbarService.showSnackBar('Theme changes applied');
   }
 
   Future<void> _loadThemeMode() async {
