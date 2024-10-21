@@ -14,14 +14,6 @@ class ThemeSelectionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Choose theme'),
-      actions: [
-        TextButton(
-          child: const Text("Close"),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -45,6 +37,14 @@ class ThemeSelectionDialog extends StatelessWidget {
           ),
         ],
       ),
+      actions: [
+        TextButton(
+          child: const Text("Close"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
     );
   }
 }

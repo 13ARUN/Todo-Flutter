@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/models/task_model.dart';
 
-part 'form_fields.dart';
 part 'buttons.dart';
 part 'date_picker.dart';
+part 'form_fields.dart';
 
 class TaskInput extends StatefulWidget {
   const TaskInput({

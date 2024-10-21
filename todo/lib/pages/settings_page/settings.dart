@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/services/providers/theme_provider.dart';
 
-part 'theme_selection_dialog.dart';
 part 'theme_option_widget.dart';
+part 'theme_selection_dialog.dart';
 
 class Settings extends ConsumerWidget {
   const Settings({super.key});
@@ -18,7 +17,7 @@ class Settings extends ConsumerWidget {
         title: const Text('Settings'),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -26,7 +25,8 @@ class Settings extends ConsumerWidget {
             ListTile(
               leading: const Icon(Icons.brightness_6_outlined),
               title: const Text('Theme'),
-              subtitle: Text(ref.read(themeProvider.notifier).currentThemeOption),
+              subtitle:
+                  Text(ref.read(themeProvider.notifier).currentThemeOption),
               contentPadding: const EdgeInsets.symmetric(horizontal: 15),
               onTap: () => _showThemeSelectionDialog(context, ref, themeMode),
             ),

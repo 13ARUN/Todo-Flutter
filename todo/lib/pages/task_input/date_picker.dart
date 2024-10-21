@@ -1,5 +1,10 @@
 part of 'task_input.dart';
 
+String _formatDate(DateTime date) {
+  final DateFormat formatter = DateFormat('MMM dd, yyyy');
+  return formatter.format(date);
+}
+
 Future<void> _selectDate(
     BuildContext context, TextEditingController dueDateController) async {
   DateTime now = DateTime.now();
@@ -13,10 +18,4 @@ Future<void> _selectDate(
   if (pickedDate != null) {
     dueDateController.text = _formatDate(pickedDate);
   }
-}
-
-// Date Formatter
-String _formatDate(DateTime date) {
-  final DateFormat formatter = DateFormat('MMM d, yyyy');
-  return formatter.format(date);
 }

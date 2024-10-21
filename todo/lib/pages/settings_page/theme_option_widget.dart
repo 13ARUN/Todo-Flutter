@@ -23,7 +23,7 @@ class ThemeOptionWidget extends StatelessWidget {
       onChanged: (ThemeMode? selectedValue) {
         if (selectedValue != null) {
           ref.read(themeProvider.notifier).setThemeMode(selectedValue);
-          Navigator.pop(context); // Close dialog after selection
+          Navigator.pop(context);
         }
       },
     );
