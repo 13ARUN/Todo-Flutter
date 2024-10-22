@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-final kColorScheme = ColorScheme.fromSeed(
+final lightColorScheme = ColorScheme.fromSeed(
     seedColor: const Color.fromARGB(255, 108, 58, 184),
     brightness: Brightness.light);
 
-final kDarkColorScheme = ColorScheme.fromSeed(
+final darkColorScheme = ColorScheme.fromSeed(
     seedColor: const Color.fromARGB(255, 108, 58, 184),
     brightness: Brightness.dark);
 
 final ThemeData lightTheme = ThemeData(
-  colorScheme: kColorScheme,
+  colorScheme: lightColorScheme,
   textTheme: GoogleFonts.poppinsTextTheme().apply(
     bodyColor: Colors.black,
   ),
 );
 
 final ThemeData darkTheme = ThemeData(
-  colorScheme: kDarkColorScheme,
+  colorScheme: darkColorScheme,
   textTheme: GoogleFonts.poppinsTextTheme().apply(
     bodyColor: Colors.white,
   ),

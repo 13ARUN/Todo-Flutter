@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/settings_page/settings.dart';
-import 'package:todo/pages/task_input/task_input.dart';
+import 'package:todo/pages/task_input_page/task_input.dart';
 import 'package:todo/services/providers/tasks_provider.dart';
 import 'package:todo/pages/todo_main_page/taskview/task_list.dart';
 

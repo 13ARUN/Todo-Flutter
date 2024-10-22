@@ -7,8 +7,11 @@ class SnackbarService {
   static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
-  static void showSnackBar(String message,
-      {String? actionLabel, VoidCallback? onActionPressed}) {
+  static void showSnackBar(
+    String message, {
+    String? actionLabel,
+    VoidCallback? onActionPressed,
+  }) {
     final messenger = scaffoldMessengerKey.currentState;
     if (messenger != null) {
       messenger.clearSnackBars();

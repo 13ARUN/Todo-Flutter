@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/models/task_model.dart';
-import 'package:todo/pages/task_input/task_input.dart';
+import 'package:todo/pages/task_input_page/task_input.dart';
 import 'package:todo/theme/theme_data.dart';
 import 'package:todo/services/providers/tasks_provider.dart';
 
@@ -120,11 +120,11 @@ class TaskItem extends ConsumerWidget {
       ),
       tileColor: task.isCompleted
           ? isDarkMode
-              ? kDarkColorScheme.surfaceContainerLow
-              : kColorScheme.surfaceContainerHigh
+              ? darkColorScheme.surfaceContainerLow
+              : lightColorScheme.surfaceContainerHigh
           : isDarkMode
-              ? kDarkColorScheme.onPrimaryFixedVariant
-              : kColorScheme.primaryFixedDim,
+              ? darkColorScheme.onPrimaryFixedVariant
+              : lightColorScheme.primaryFixedDim,
     );
   }
 }

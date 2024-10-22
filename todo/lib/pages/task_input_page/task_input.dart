@@ -82,25 +82,43 @@ class _TaskInputState extends ConsumerState<TaskInput> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 25,
+            ),
             child: Form(
               key: _formGlobalKey,
               child: Column(
                 children: [
                   // Task Title field
-                  buildTitleField(_titleController, widget.action, widget.task,
-                      existingTasks),
+                  buildTitleField(
+                    _titleController,
+                    widget.action,
+                    widget.task,
+                    existingTasks,
+                  ),
                   const SizedBox(height: 15),
                   // Task Description field
-                  buildDescriptionField(_descriptionController),
+                  buildDescriptionField(
+                    _descriptionController,
+                  ),
                   const SizedBox(height: 15),
                   // Task Due Date field
-                  buildDueDateField(_dueDateController,
-                      () => _selectDate(context, _dueDateController)),
+                  buildDueDateField(
+                    _dueDateController,
+                    () => _selectDate(
+                      context,
+                      _dueDateController,
+                    ),
+                  ),
                   const SizedBox(height: 25),
                   // Task Form Buttons
                   buildFormButtons(
-                      context, _formGlobalKey, _submitTaskData, widget.action),
+                    context,
+                    _formGlobalKey,
+                    _submitTaskData,
+                    widget.action,
+                  ),
                 ],
               ),
             ),
