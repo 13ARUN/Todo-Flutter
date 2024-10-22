@@ -43,6 +43,6 @@ class DataBase {
   }
 
   Future<String> _loadSQLFromFile(String filename) async {
-    return await rootBundle.loadString('assets/queries/$filename');
+    return await rootBundle.loadString('assets/database/$filename');
   }
 }
