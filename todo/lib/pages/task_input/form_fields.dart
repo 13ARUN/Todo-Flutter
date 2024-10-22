@@ -1,6 +1,7 @@
 part of 'task_input.dart';
 
-Widget buildTitleField(TextEditingController controller) {
+Widget buildTitleField(TextEditingController controller, String action,
+    TaskModel? task, List<TaskModel> existingTasks) {
   return TextFormField(
     autofocus: true,
     controller: controller,
@@ -14,9 +15,17 @@ Widget buildTitleField(TextEditingController controller) {
       if (value == null || value.isEmpty) {
         return "Enter a task title";
       }
+
       if (value.trim().isEmpty) {
+        controller.text = '';
         return "Task cannot contain only spaces";
       }
+      if (existingTasks.any((t) =>
+          t.title.toLowerCase() == value.trim().toLowerCase() &&
+          (action == 'add' || (action == 'edit' && t.id != task?.id)))) {
+        return 'Task title already exists';
+      }
+
       return null;
     },
   );

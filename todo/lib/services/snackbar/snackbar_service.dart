@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:todo/services/logger/logger.dart';
 
 class SnackbarService {
+  static final logger = getLogger('SnackbarService');
+
   static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
@@ -9,6 +12,7 @@ class SnackbarService {
     final messenger = scaffoldMessengerKey.currentState;
     if (messenger != null) {
       messenger.clearSnackBars();
+      logger.i("Snackbars Cleared");
       messenger.showSnackBar(
         SnackBar(
           content: Text(message),
@@ -21,6 +25,7 @@ class SnackbarService {
               : null,
         ),
       );
+      logger.i("Snackbars shown with message: $message");
     }
   }
 }

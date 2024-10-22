@@ -3,5 +3,5 @@ CREATE TABLE tasks (
     title TEXT,
     description TEXT,
     date TEXT,
-    isCompleted INTEGER,
+    isCompleted INTEGER
 );

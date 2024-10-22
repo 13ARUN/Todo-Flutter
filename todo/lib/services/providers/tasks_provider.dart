@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/services/database/database_helper.dart';
+import 'package:todo/services/logger/logger.dart';
 import 'package:todo/services/snackbar/snackbar_service.dart';
 
 class TaskNotifier extends StateNotifier<List<TaskModel>> {
+  static final logger = getLogger('TaskNotifier');
+
   TaskNotifier() : super([]) {
     _loadTasks();
   }
@@ -13,36 +15,44 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
 
   Future<void> _loadTasks() async {
     try {
+      logger.i("Loading tasks from database...");
       final tasks = await _db.getTasks();
+      logger.i("Tasks loaded successfully: ${tasks.length} tasks found.");
       state = tasks;
-      SnackbarService.showSnackBar('Tasks loaded successfully');
     } catch (e) {
+      logger.e("Failed to load tasks from database", error: e);
       SnackbarService.showSnackBar('Failed to load tasks');
-      debugPrint('Error: $e');
     }
   }
 
   Future<void> addTask(TaskModel task) async {
+    logger.i("Adding task to database: ${task.title}");
     try {
       await _db.addTask(task);
       state = [...state, task];
+      logger.i("Task added successfully: $task");
       SnackbarService.showSnackBar('Task added successfully');
     } catch (e) {
+      logger.e("Unable to add the task", error: e);
       SnackbarService.showSnackBar('Unable to add the task. Please try again.');
-      debugPrint('Error: $e');
     }
   }
 
   Future<void> deleteTask(String id) async {
     final taskIndex = state.indexWhere((task) => task.id == id);
-    if (taskIndex == -1) return;
+    if (taskIndex == -1) {
+      logger.w("Task with id: $id not found for deletion.");
+      return;
+    }
 
     final taskBackup = state[taskIndex];
     final newState = List<TaskModel>.from(state)..removeAt(taskIndex);
     state = newState;
 
+    logger.i("Deleting task with id: $id");
     try {
       await _db.deleteTask(id);
+      logger.i("Task deleted successfully: $id");
       SnackbarService.showSnackBar(
         'Task deleted successfully',
         actionLabel: 'Undo',
@@ -53,32 +63,37 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
             state = updatedState;
 
             await _db.addTask(taskBackup);
+            logger.i("Restored deleted task: $taskBackup");
             SnackbarService.showSnackBar('Deleted task restored');
           } catch (e) {
-            debugPrint('Error: $e');
+            logger.e("Failed to restore deleted task", error: e);
           }
         },
       );
     } catch (e) {
+      logger.e("Unable to delete task with id: $id", error: e);
       SnackbarService.showSnackBar(
           'Unable to delete this task. Please try again.');
-      debugPrint('Error: $e');
-      state = [...state, taskBackup];
+      state = [...state, taskBackup]; // Restore state on failure
     }
   }
 
   Future<void> editTask(TaskModel editedTask) async {
     final taskIndex = state.indexWhere((task) => task.id == editedTask.id);
     if (taskIndex != -1) {
+      logger.i("Editing task: $editedTask");
       state[taskIndex] = editedTask;
       try {
         await _db.updateTask(editedTask);
+        logger.i("Task edited successfully: $editedTask");
         SnackbarService.showSnackBar('Task edited successfully');
       } catch (e) {
+        logger.e("Unable to edit task: $editedTask", error: e);
         SnackbarService.showSnackBar(
             'Unable to edit this task. Please try again.');
-        debugPrint('Error: $e');
       }
+    } else {
+      logger.w("Task with id: ${editedTask.id} not found for editing.");
     }
   }
 
@@ -95,25 +110,31 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     final taskIndex = newState.indexWhere((t) => t.id == task.id);
 
     if (taskIndex != -1) {
+      logger.i("Toggling completion for task: $updatedTask");
       newState[taskIndex] = updatedTask;
       state = newState;
 
       try {
         await _db.updateTask(updatedTask);
+        logger.i("Task updated successfully: $updatedTask");
         SnackbarService.showSnackBar('Task updated successfully');
       } catch (e) {
+        logger.e("Error updating task: $updatedTask", error: e);
         SnackbarService.showSnackBar('Error updating task');
-        debugPrint('Error updating task: $e');
       }
+    } else {
+      logger.w("Task with id: ${task.id} not found for toggling completion.");
     }
   }
 
   Future<void> deleteAllTasks() async {
     final tasksBackup = List<TaskModel>.from(state);
     state = [];
+    logger.i("Deleting all tasks...");
 
     try {
       await _db.deleteTasks();
+      logger.i("All tasks deleted successfully.");
       SnackbarService.showSnackBar(
         'All tasks deleted',
         actionLabel: 'Undo',
@@ -123,30 +144,36 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
               await _db.addTask(task);
             }
             state = tasksBackup;
+            logger.i("Restored all deleted tasks.");
             SnackbarService.showSnackBar('Deleted tasks restored');
           } catch (e) {
-            debugPrint('Error restoring tasks: $e');
+            logger.e("Error restoring tasks", error: e);
           }
         },
       );
     } catch (e) {
+      logger.e("Unable to delete all tasks", error: e);
       SnackbarService.showSnackBar(
           'Unable to delete all tasks. Please try again.');
-      debugPrint('Error: $e');
-      state = tasksBackup;
+      state = tasksBackup; // Restore state on failure
     }
   }
 
   Future<void> deleteCompletedTasks() async {
+    final completedTasks = state.where((task) => task.isCompleted).toList();
     state = state.where((task) => !task.isCompleted).toList();
+
+    logger.i(
+        "Deleting completed tasks: ${completedTasks.length} tasks to delete.");
 
     try {
       await _db.deleteTasks(completed: true);
+      logger.i("Completed tasks deleted successfully.");
       SnackbarService.showSnackBar('Completed tasks deleted');
     } catch (e) {
+      logger.e("Unable to delete completed tasks", error: e);
       SnackbarService.showSnackBar(
           'Unable to delete completed tasks. Please try again.');
-      debugPrint('Error: $e');
     }
   }
 }

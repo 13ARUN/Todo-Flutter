@@ -1,10 +1,9 @@
-import 'package:logger/logger.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/services/database/database.dart';
-
+import 'package:todo/services/logger/logger.dart';
 
 class DatabaseHelper {
-  static final Logger logger = Logger();
+  final logger = getLogger('DatabaseHelper');
 
   static const String _tableName = 'tasks';
 
@@ -12,7 +11,7 @@ class DatabaseHelper {
     final db = await DataBase().database;
     logger.i("Fetching all tasks ordered by $orderBy");
     final result = await db.query(_tableName, orderBy: '$orderBy ASC');
-    logger.i("Fetched ${result.length} tasks");
+    logger.i("Fetched ${result.length} tasks from table: $_tableName");
     return result.map((map) => TaskModel.fromMap(map)).toList();
   }
 
@@ -20,7 +19,7 @@ class DatabaseHelper {
     final db = await DataBase().database;
     logger.i("Inserting task with ID: ${task.id}, title: ${task.title}");
     await db.insert(_tableName, task.toMap());
-    logger.i("Task with ID ${task.id} inserted");
+    logger.i("Task with ID: ${task.id}, title: ${task.title} inserted");
   }
 
   Future<void> deleteTask(String id) async {
@@ -32,14 +31,14 @@ class DatabaseHelper {
 
   Future<void> updateTask(TaskModel task) async {
     final db = await DataBase().database;
-    logger.i("Updating task with ID ${task.id}");
+    logger.i("Updating task with ID: ${task.id}, title: ${task.title}");
     await db.update(
       _tableName,
       task.toMap(),
       where: 'id = ?',
       whereArgs: [task.id],
     );
-    logger.i("Task with ID ${task.id} updated");
+    logger.i("Task with ID: ${task.id}, title: ${task.title} updated");
   }
 
   Future<void> deleteTasks({bool completed = false}) async {

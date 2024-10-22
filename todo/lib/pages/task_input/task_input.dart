@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/models/task_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo/services/providers/tasks_provider.dart';
 
 part 'buttons.dart';
 part 'date_picker.dart';
 part 'form_fields.dart';
 
-class TaskInput extends StatefulWidget {
+class TaskInput extends ConsumerStatefulWidget {
   const TaskInput({
     super.key,
     required this.action,
@@ -17,10 +19,10 @@ class TaskInput extends StatefulWidget {
   final TaskModel? task;
 
   @override
-  State<TaskInput> createState() => _TaskInputState();
+  ConsumerState<TaskInput> createState() => _TaskInputState();
 }
 
-class _TaskInputState extends State<TaskInput> {
+class _TaskInputState extends ConsumerState<TaskInput> {
   final _formGlobalKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -70,10 +72,11 @@ class _TaskInputState extends State<TaskInput> {
 
   @override
   Widget build(BuildContext context) {
+    final existingTasks = ref.watch(tasksProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.action == "add" ? "Add a new task" : "Update task",
+          widget.action == 'add' ? "Add a new task" : "Update task",
         ),
       ),
       body: SafeArea(
@@ -85,7 +88,8 @@ class _TaskInputState extends State<TaskInput> {
               child: Column(
                 children: [
                   // Task Title field
-                  buildTitleField(_titleController),
+                  buildTitleField(_titleController, widget.action, widget.task,
+                      existingTasks),
                   const SizedBox(height: 15),
                   // Task Description field
                   buildDescriptionField(_descriptionController),
