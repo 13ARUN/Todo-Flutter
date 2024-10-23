@@ -1,8 +1,10 @@
 import 'package:logger/logger.dart';
+// import 'package:todo/services/logger/log_output.dart';
 
 Logger getLogger(String classname) {
   return Logger(
     printer: CustomLogPrinter(classname),
+    // output: FileLogOutput(),
   );
 }
 
