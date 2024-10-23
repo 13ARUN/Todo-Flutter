@@ -15,34 +15,40 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
   }
 
   void setThemeMode(ThemeMode mode) async {
+    logger.t("Executing setThemeMode method");
+    logger.d("Previous Theme: $state");
     state = mode;
     try {
       logger.i("Setting Theme Preference to $mode");
       await _asyncPrefs.setInt(themePrefKey, mode.index);
+      logger.d("New Theme preference: $state");
       logger.i("Theme Preference stored locally");
-      SnackbarService.showSnackBar('Theme changed to $currentThemeOption');
+      SnackbarService.displaySnackBar('Theme changed to $currentThemeOption');
     } catch (e) {
       logger.e("Theme Preference not set");
-      SnackbarService.showSnackBar('Failed to apply theme changes');
+      SnackbarService.displaySnackBar('Failed to apply theme changes');
     }
   }
 
   Future<void> _loadThemeMode() async {
+    logger.t("Executing _loadThemeMode method");
     try {
+      logger.i("Obtaining locally stored Theme Prefrence");
       final themeIndex =
           await _asyncPrefs.getInt(themePrefKey) ?? ThemeMode.system.index;
-      logger.i("Obtaining locally stored Theme Prefrence");
       state = ThemeMode.values[themeIndex];
       logger.i("Obtained locally stored Theme Prefrence: $state");
     } catch (e) {
-      logger.e("Cannot obtain Theme Prefrence");
+      logger.e("Cannot obtain locally stored Theme Prefrence");
       state = ThemeMode.system;
-      logger.i("Theme Prefrence set to $state");
-      SnackbarService.showSnackBar('Failed to load theme preference');
+      logger.i("Theme Prefrence set to default: $state");
+      SnackbarService.displaySnackBar('Failed to load theme preference');
     }
   }
 
   String get currentThemeOption {
+    logger.t("Executing currentThemeOption get method");
+    logger.d("Returned Theme: $state");
     switch (state) {
       case ThemeMode.light:
         return 'Light';

@@ -21,7 +21,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       state = tasks;
     } catch (e) {
       logger.e("Failed to load tasks from database", error: e);
-      SnackbarService.showSnackBar('Failed to load tasks');
+      SnackbarService.displaySnackBar('Failed to load tasks');
     }
   }
 
@@ -31,10 +31,10 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       await _db.addTask(task);
       state = [...state, task];
       logger.i("Task added successfully: $task");
-      SnackbarService.showSnackBar('Task added successfully');
+      SnackbarService.displaySnackBar('Task added successfully');
     } catch (e) {
       logger.e("Unable to add the task", error: e);
-      SnackbarService.showSnackBar('Unable to add the task. Please try again.');
+      SnackbarService.displaySnackBar('Unable to add the task. Please try again.');
     }
   }
 
@@ -53,7 +53,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     try {
       await _db.deleteTask(id);
       logger.i("Task deleted successfully: $id");
-      SnackbarService.showSnackBar(
+      SnackbarService.displaySnackBar(
         'Task deleted successfully',
         actionLabel: 'Undo',
         onActionPressed: () async {
@@ -64,7 +64,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
 
             await _db.addTask(taskBackup);
             logger.i("Restored deleted task: $taskBackup");
-            SnackbarService.showSnackBar('Deleted task restored');
+            SnackbarService.displaySnackBar('Deleted task restored');
           } catch (e) {
             logger.e("Failed to restore deleted task", error: e);
           }
@@ -72,7 +72,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       );
     } catch (e) {
       logger.e("Unable to delete task with id: $id", error: e);
-      SnackbarService.showSnackBar(
+      SnackbarService.displaySnackBar(
           'Unable to delete this task. Please try again.');
       state = [...state, taskBackup]; // Restore state on failure
     }
@@ -86,10 +86,10 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       try {
         await _db.updateTask(editedTask);
         logger.i("Task edited successfully: $editedTask");
-        SnackbarService.showSnackBar('Task edited successfully');
+        SnackbarService.displaySnackBar('Task edited successfully');
       } catch (e) {
         logger.e("Unable to edit task: $editedTask", error: e);
-        SnackbarService.showSnackBar(
+        SnackbarService.displaySnackBar(
             'Unable to edit this task. Please try again.');
       }
     } else {
@@ -117,10 +117,10 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       try {
         await _db.updateTask(updatedTask);
         logger.i("Task updated successfully: $updatedTask");
-        SnackbarService.showSnackBar('Task updated successfully');
+        SnackbarService.displaySnackBar('Task updated successfully');
       } catch (e) {
         logger.e("Error updating task: $updatedTask", error: e);
-        SnackbarService.showSnackBar('Error updating task');
+        SnackbarService.displaySnackBar('Error updating task');
       }
     } else {
       logger.w("Task with id: ${task.id} not found for toggling completion.");
@@ -135,7 +135,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     try {
       await _db.deleteTasks();
       logger.i("All tasks deleted successfully.");
-      SnackbarService.showSnackBar(
+      SnackbarService.displaySnackBar(
         'All tasks deleted',
         actionLabel: 'Undo',
         onActionPressed: () async {
@@ -145,7 +145,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
             }
             state = tasksBackup;
             logger.i("Restored all deleted tasks.");
-            SnackbarService.showSnackBar('Deleted tasks restored');
+            SnackbarService.displaySnackBar('Deleted tasks restored');
           } catch (e) {
             logger.e("Error restoring tasks", error: e);
           }
@@ -153,7 +153,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       );
     } catch (e) {
       logger.e("Unable to delete all tasks", error: e);
-      SnackbarService.showSnackBar(
+      SnackbarService.displaySnackBar(
           'Unable to delete all tasks. Please try again.');
       state = tasksBackup; // Restore state on failure
     }
@@ -169,10 +169,10 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     try {
       await _db.deleteTasks(completed: true);
       logger.i("Completed tasks deleted successfully.");
-      SnackbarService.showSnackBar('Completed tasks deleted');
+      SnackbarService.displaySnackBar('Completed tasks deleted');
     } catch (e) {
       logger.e("Unable to delete completed tasks", error: e);
-      SnackbarService.showSnackBar(
+      SnackbarService.displaySnackBar(
           'Unable to delete completed tasks. Please try again.');
     }
   }

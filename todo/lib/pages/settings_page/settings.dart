@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo/services/logger/logger.dart';
 import 'package:todo/services/providers/theme_provider.dart';
 
 part 'theme_option_widget.dart';
@@ -8,9 +9,13 @@ part 'theme_selection_dialog.dart';
 class Settings extends ConsumerWidget {
   const Settings({super.key});
 
+  static final logger = getLogger('Settings');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logger.t("Build Method Executing");
     final themeMode = ref.watch(themeProvider);
+    logger.d("Current Theme Mode: $themeMode");
 
     return Scaffold(
       appBar: AppBar(
@@ -28,7 +33,10 @@ class Settings extends ConsumerWidget {
               subtitle:
                   Text(ref.read(themeProvider.notifier).currentThemeOption),
               contentPadding: const EdgeInsets.symmetric(horizontal: 15),
-              onTap: () => _showThemeSelectionDialog(context, ref, themeMode),
+              onTap: () {
+                logger.i("Clicked on Theme Selection option");
+                _showThemeSelectionDialog(context, ref, themeMode);
+              },
             ),
           ],
         ),
@@ -38,6 +46,7 @@ class Settings extends ConsumerWidget {
 
   void _showThemeSelectionDialog(
       BuildContext context, WidgetRef ref, ThemeMode themeMode) {
+    logger.t("Executing _showThemeSelectionDialog method");
     showDialog(
       context: context,
       builder: (BuildContext context) {

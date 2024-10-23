@@ -1,6 +1,8 @@
 part of 'settings.dart';
 
 class ThemeSelectionDialog extends StatelessWidget {
+
+  static final logger = getLogger('ThemeSelectionDialog');
   final ThemeMode themeMode;
   final WidgetRef ref;
 
@@ -12,6 +14,7 @@ class ThemeSelectionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logger.t("Build Method Executing");
     return AlertDialog(
       title: const Text('Choose theme'),
       content: Column(
@@ -42,6 +45,7 @@ class ThemeSelectionDialog extends StatelessWidget {
           child: const Text("Close"),
           onPressed: () {
             Navigator.pop(context);
+            logger.i("Theme selection dialog closed by clicking close button");
           },
         ),
       ],

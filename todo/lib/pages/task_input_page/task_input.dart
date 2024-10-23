@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo/services/logger/logger.dart';
 import 'package:todo/services/providers/tasks_provider.dart';
 
 part 'buttons.dart';
@@ -18,6 +19,8 @@ class TaskInput extends ConsumerStatefulWidget {
   final String action;
   final TaskModel? task;
 
+  
+
   @override
   ConsumerState<TaskInput> createState() => _TaskInputState();
 }
@@ -27,6 +30,8 @@ class _TaskInputState extends ConsumerState<TaskInput> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _dueDateController = TextEditingController();
+
+  static final logger = getLogger('_TaskInputState');
 
   @override
   void initState() {
@@ -55,6 +60,7 @@ class _TaskInputState extends ConsumerState<TaskInput> {
 
   //* Return Task Inputs
   void _submitTaskData() {
+    logger.t("Executing _submitTaskData method");
     final enteredTitle = _titleController.text.trim();
     final enteredDescription = _descriptionController.text.trim();
     final selectedDate = _dueDateController.text;
@@ -72,6 +78,7 @@ class _TaskInputState extends ConsumerState<TaskInput> {
 
   @override
   Widget build(BuildContext context) {
+    logger.t("Build Method Executing");
     final existingTasks = ref.watch(tasksProvider);
     return Scaffold(
       appBar: AppBar(
