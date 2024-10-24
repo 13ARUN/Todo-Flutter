@@ -1,8 +1,8 @@
 import 'package:todo/models/task_model.dart';
 import 'package:todo/services/database/database.dart';
-import 'package:todo/services/logger/logger.dart';
+import 'package:todo/utils/logger/logger.dart';
 
-class DatabaseHelper {
+class DatabaseMethods {
   final logger = getLogger('DatabaseHelper');
 
   static const String _tableName = 'tasks';

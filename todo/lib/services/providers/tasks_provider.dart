@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/models/task_model.dart';
-import 'package:todo/services/database/database_helper.dart';
-import 'package:todo/services/logger/logger.dart';
-import 'package:todo/services/snackbar/snackbar_service.dart';
+import 'package:todo/services/database/database_methods.dart';
+import 'package:todo/utils/logger/logger.dart';
+import 'package:todo/utils/snackbar/snackbar_service.dart';
 
 class TaskNotifier extends StateNotifier<List<TaskModel>> {
   static final logger = getLogger('TaskNotifier');
@@ -11,7 +11,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     _loadTasks();
   }
 
-  final DatabaseHelper _db = DatabaseHelper();
+  final DatabaseMethods _db = DatabaseMethods();
 
   Future<void> _loadTasks() async {
     try {

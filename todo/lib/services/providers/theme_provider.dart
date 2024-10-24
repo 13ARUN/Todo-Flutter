@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo/services/logger/logger.dart';
-import 'package:todo/services/snackbar/snackbar_service.dart';
+import 'package:todo/utils/logger/logger.dart';
+import 'package:todo/utils/snackbar/snackbar_service.dart';
 
 class ThemeNotifier extends StateNotifier<ThemeMode> {
   static final logger = getLogger('ThemeNotifier');

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo/services/logger/logger.dart';
+import 'package:todo/utils/logger/logger.dart';
 import 'package:todo/services/providers/theme_provider.dart';
 
 part 'theme_option_widget.dart';

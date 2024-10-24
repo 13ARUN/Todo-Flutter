@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo/services/logger/logger.dart';
+import 'package:todo/utils/logger/logger.dart';
 
 class SnackbarService {
   static final logger = getLogger('SnackbarService');

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/pages/todo_main_page/todo_main_page.dart';
 import 'package:todo/theme/theme_data.dart';
 import 'package:todo/services/providers/theme_provider.dart';
-import 'package:todo/services/snackbar/snackbar_service.dart';
+import 'package:todo/utils/snackbar/snackbar_service.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
