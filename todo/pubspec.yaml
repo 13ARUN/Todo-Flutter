@@ -42,6 +42,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.5.3
   shared_preferences: ^2.0.15
+  dio: ^5.1.1
 
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -76,7 +77,6 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/database/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -43,6 +43,17 @@ Widget buildDescriptionField(TextEditingController controller) {
       hintText: 'Enter Task Description',
       suffixIcon: Icon(Icons.description_outlined),
     ),
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return "Enter a task description";
+      }
+
+      if (value.trim().isEmpty) {
+        controller.text = '';
+        return "Task description cannot contain only spaces";
+      }
+      return null;
+    },
   );
 }
 

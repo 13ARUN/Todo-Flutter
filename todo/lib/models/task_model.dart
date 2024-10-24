@@ -13,6 +13,7 @@ class TaskModel {
     required this.isCompleted,
   });
 
+  // Convert TaskModel to Map for storing in the database
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -23,13 +24,24 @@ class TaskModel {
     };
   }
 
+  // Convert Map (from database or API) to TaskModel
   factory TaskModel.fromMap(Map<String, dynamic> map) {
     return TaskModel(
-      id: map['id'],
+      id: map['id'], // From database
       title: map['title'],
       description: map['description'],
-      date: map['date'],
+      date: 'no date', // From database
       isCompleted: map['isCompleted'] == 1,
+    );
+  }
+  
+  factory TaskModel.fromApiMap(Map<String, dynamic> map) {
+    return TaskModel(
+      id: map['_id'], // From API response (API uses '_id')
+      title: map['title'] ?? 'No Title', // Default to 'No Title' if null
+      description: map['description'] ?? 'No Description', // Default to 'No Description' if null
+      date: map['created_at'], // Assign a default value for date
+      isCompleted: map['is_completed'] ?? false, // Default to false if null
     );
   }
 }
