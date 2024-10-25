@@ -11,23 +11,34 @@ class DatabaseMethods {
 
   Future<void> fetchAndStoreTodos() async {
     try {
-      deleteTasks();
       logger.i("Fetching todos from API");
       final response = await dio.get('https://api.nstack.in/v1/todos');
-
       if (response.statusCode == 200) {
-        List<dynamic> todos =
-            response.data['items']; // Access the "items" array from response
-
-        // Convert each item to TaskModel and store it in the database
-        List<TaskModel> taskList =
+        List<dynamic> todos = response.data['items'];
+        List<TaskModel> apiTaskList =
             todos.map((item) => TaskModel.fromApiMap(item)).toList();
-
-        for (var task in taskList) {
-          await addTask(task); // Store each task in the database
+        List<TaskModel> dbTaskList = await getTasks();
+        for (var apiTask in apiTaskList) {
+          try {
+            final dbTask =
+                dbTaskList.firstWhere((task) => task.id == apiTask.id);
+            if (dbTask != apiTask) {
+              await updateTask(apiTask);
+            }
+          } catch (e) {
+            await addTask(apiTask);
+          }
         }
-
-        logger.i("Fetched and stored ${taskList.length} todos");
+        for (var dbTask in dbTaskList) {
+          try {
+            // ignore: unused_local_variable
+            final apiTask =
+                apiTaskList.firstWhere((task) => task.id == dbTask.id);
+          } catch (e) {
+            await deleteTask(dbTask.id);
+          }
+        }
+        logger.i("Fetched and synchronized tasks with the API");
       } else {
         logger.e("Failed to fetch todos: ${response.statusCode}");
       }
@@ -35,6 +46,27 @@ class DatabaseMethods {
       logger.e("Error fetching todos from API: $e");
     }
   }
+
+  // Future<void> fetchAndStoreTodos() async {
+  //   try {
+  //     deleteTasks();
+  //     logger.i("Fetching todos from API");
+  //     final response = await dio.get('https://api.nstack.in/v1/todos');
+  //     if (response.statusCode == 200) {
+  //       List<dynamic> todos = response.data['items'];
+  //       List<TaskModel> taskList =
+  //           todos.map((item) => TaskModel.fromApiMap(item)).toList();
+  //       for (var task in taskList) {
+  //         await addTask(task);
+  //       }
+  //       logger.i("Fetched and stored ${taskList.length} todos");
+  //     } else {
+  //       logger.e("Failed to fetch todos: ${response.statusCode}");
+  //     }
+  //   } catch (e) {
+  //     logger.e("Error fetching todos from API: $e");
+  //   }
+  // }
 
   Future<List<TaskModel>> getTasks({String orderBy = 'id'}) async {
     final db = await DataBase().database;

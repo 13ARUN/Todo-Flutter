@@ -41,9 +41,9 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
   Future<void> addTask(TaskModel task) async {
     logger.i("Adding task to database: ${task.title}");
     try {
-      _apiService.postTodo(task);
-      await _db.addTask(task);
-      // _loadTasksfromAPI();
+      await _apiService.postTodo(task);
+      // await _db.addTask(task);
+      _loadTasksfromAPI();
       state = [...state, task];
       logger.i("Task added successfully: $task");
       SnackbarService.displaySnackBar('Task added successfully');
@@ -67,9 +67,9 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
 
     logger.i("Deleting task with id: $id");
     try {
-      _apiService.deleteTodo(id);
-      await _db.deleteTask(id);
-      // _loadTasksfromAPI();
+      await _apiService.deleteTodo(id);
+      // await _db.deleteTask(id);
+      _loadTasksfromAPI();
       logger.i("Task deleted successfully: $id");
       SnackbarService.displaySnackBar(
         'Task deleted successfully',
@@ -80,8 +80,8 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
               ..insert(taskIndex, taskBackup);
             state = updatedState;
             await _apiService.postTodo(taskBackup);
-            await _db.addTask(taskBackup);
-            // _loadTasksfromAPI();
+            // await _db.addTask(taskBackup);
+            _loadTasksfromAPI();
             logger.i("Restored deleted task: $taskBackup");
             SnackbarService.displaySnackBar('Deleted task restored');
           } catch (e) {
@@ -103,9 +103,9 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       logger.i("Editing task: $editedTask");
       state[taskIndex] = editedTask;
       try {
-        _apiService.putTodo(editedTask);
-        await _db.updateTask(editedTask);
-        // _loadTasksfromAPI();
+        await _apiService.putTodo(editedTask);
+        // await _db.updateTask(editedTask);
+        _loadTasksfromAPI();
         logger.i("Task edited successfully: $editedTask");
         SnackbarService.displaySnackBar('Task edited successfully');
       } catch (e) {
@@ -135,13 +135,17 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       newState[taskIndex] = updatedTask;
       state = newState;
 
+      isLoading = true; // Start loading
       try {
-        _apiService.putTodo(updatedTask);
-        await _db.updateTask(updatedTask);
+        await _apiService.putTodo(updatedTask);
+        // await _db.updateTask(updatedTask);
+        _loadTasksfromAPI();
         logger.i("Task updated successfully: $updatedTask");
       } catch (e) {
         logger.e("Error updating task: $updatedTask", error: e);
         SnackbarService.displaySnackBar('Error updating task');
+      } finally {
+        isLoading = false; // End loading
       }
     } else {
       logger.w("Task with id: ${task.id} not found for toggling completion.");
@@ -152,27 +156,30 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     final tasksBackup = List<TaskModel>.from(state);
     state = [];
     logger.i("Deleting all tasks...");
-
+    isLoading = true;
     try {
-      _apiService.deleteAllTodos(tasksBackup);
-      await _db.deleteTasks();
-      // _loadTasksfromAPI();
+      await _apiService.deleteAllTodos(tasksBackup);
+      // await _db.deleteTasks();
+      _loadTasksfromAPI();
       logger.i("All tasks deleted successfully.");
       SnackbarService.displaySnackBar(
         'All tasks deleted',
         actionLabel: 'Undo',
         onActionPressed: () async {
+          isLoading = true;
           try {
             for (var task in tasksBackup) {
-              _apiService.postTodo(task);
-              await _db.addTask(task);
+              await _apiService.postTodo(task);
+              // await _db.addTask(task);
             }
-            // _loadTasksfromAPI();
+            _loadTasksfromAPI();
             state = tasksBackup;
             logger.i("Restored all deleted tasks.");
             SnackbarService.displaySnackBar('Deleted tasks restored');
           } catch (e) {
             logger.e("Error restoring tasks", error: e);
+          } finally {
+            isLoading = false;
           }
         },
       );
@@ -181,6 +188,8 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       SnackbarService.displaySnackBar(
           'Unable to delete all tasks. Please try again.');
       state = tasksBackup; // Restore state on failure
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -191,9 +200,9 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     logger.i(
         "Deleting completed tasks: ${completedTasks.length} tasks to delete.");
     try {
-      _apiService.deleteAllTodos(completedTasks);
-      await _db.deleteTasks(completed: true);
-      // _loadTasksfromAPI();
+      await _apiService.deleteAllTodos(completedTasks);
+      // await _db.deleteTasks(completed: true);
+      _loadTasksfromAPI();
       logger.i("Completed tasks deleted successfully.");
       SnackbarService.displaySnackBar('Completed tasks deleted');
     } catch (e) {
