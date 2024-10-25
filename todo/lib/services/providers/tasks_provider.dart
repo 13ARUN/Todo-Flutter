@@ -10,6 +10,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
   static final logger = getLogger('TaskNotifier');
   final TaskApiService _apiService = TaskApiService();
   final Dio dio = Dio();
+  bool isLoading = true;
 
   TaskNotifier() : super([]) {
     _loadTasksfromAPI();
@@ -23,6 +24,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
   }
 
   Future<void> _loadTasks() async {
+    isLoading = true;
     try {
       logger.i("Loading tasks from database...");
       final tasks = await _db.getTasks();
@@ -31,13 +33,15 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     } catch (e) {
       logger.e("Failed to load tasks from database", error: e);
       SnackbarService.displaySnackBar('Failed to load tasks');
+    } finally {
+      isLoading = false;
     }
   }
 
   Future<void> addTask(TaskModel task) async {
     logger.i("Adding task to database: ${task.title}");
     try {
-      await _apiService.postTodo(task);
+      _apiService.postTodo(task);
       await _db.addTask(task);
       // _loadTasksfromAPI();
       state = [...state, task];
@@ -63,7 +67,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
 
     logger.i("Deleting task with id: $id");
     try {
-      await _apiService.deleteTodo(id);
+      _apiService.deleteTodo(id);
       await _db.deleteTask(id);
       // _loadTasksfromAPI();
       logger.i("Task deleted successfully: $id");
@@ -99,7 +103,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       logger.i("Editing task: $editedTask");
       state[taskIndex] = editedTask;
       try {
-        await _apiService.putTodo(editedTask);
+        _apiService.putTodo(editedTask);
         await _db.updateTask(editedTask);
         // _loadTasksfromAPI();
         logger.i("Task edited successfully: $editedTask");
@@ -132,7 +136,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       state = newState;
 
       try {
-        await _apiService.putTodo(updatedTask);
+        _apiService.putTodo(updatedTask);
         await _db.updateTask(updatedTask);
         logger.i("Task updated successfully: $updatedTask");
       } catch (e) {
@@ -150,7 +154,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     logger.i("Deleting all tasks...");
 
     try {
-      await _apiService.deleteAllTodos(tasksBackup);
+      _apiService.deleteAllTodos(tasksBackup);
       await _db.deleteTasks();
       // _loadTasksfromAPI();
       logger.i("All tasks deleted successfully.");
@@ -160,7 +164,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
         onActionPressed: () async {
           try {
             for (var task in tasksBackup) {
-              await _apiService.postTodo(task);
+              _apiService.postTodo(task);
               await _db.addTask(task);
             }
             // _loadTasksfromAPI();
@@ -187,7 +191,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     logger.i(
         "Deleting completed tasks: ${completedTasks.length} tasks to delete.");
     try {
-      await _apiService.deleteAllTodos(completedTasks);
+      _apiService.deleteAllTodos(completedTasks);
       await _db.deleteTasks(completed: true);
       // _loadTasksfromAPI();
       logger.i("Completed tasks deleted successfully.");

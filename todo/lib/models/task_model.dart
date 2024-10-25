@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class TaskModel {
   final String id;
   final String title;
@@ -24,24 +26,26 @@ class TaskModel {
     };
   }
 
-  // Convert Map (from database or API) to TaskModel
   factory TaskModel.fromMap(Map<String, dynamic> map) {
+    final DateTime parsedDate = DateTime.parse(map['date']); // Parse the date string into a DateTime object
+    final String formattedDate = DateFormat('MMM dd, yyyy').format(parsedDate); // Format the date
+
     return TaskModel(
       id: map['id'], // From database
       title: map['title'],
       description: map['description'],
-      date: 'no date', // From database
+      date: formattedDate, // Use the formatted date
       isCompleted: map['isCompleted'] == 1,
     );
   }
   
   factory TaskModel.fromApiMap(Map<String, dynamic> map) {
     return TaskModel(
-      id: map['_id'], // From API response (API uses '_id')
-      title: map['title'] ?? 'No Title', // Default to 'No Title' if null
-      description: map['description'] ?? 'No Description', // Default to 'No Description' if null
-      date: map['created_at'], // Assign a default value for date
-      isCompleted: map['is_completed'] ?? false, // Default to false if null
+      id: map['_id'],
+      title: map['title'] ?? 'No Title',
+      description: map['description'] ?? 'No Description',
+      date: map['created_at'],
+      isCompleted: map['is_completed'] ?? false,
     );
   }
 }
