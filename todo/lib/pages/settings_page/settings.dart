@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:todo/utils/logger/log_output.dart';
 import 'package:todo/utils/logger/logger.dart';
 import 'package:todo/services/providers/theme_provider.dart';
 
@@ -38,6 +40,15 @@ class Settings extends ConsumerWidget {
                 _showThemeSelectionDialog(context, ref, themeMode);
               },
             ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.file_download),
+              title: const Text('Export Logs'),
+              onTap: () async {
+                logger.i("Export Logs clicked");
+                await _exportLogs();
+              },
+            ),
           ],
         ),
       ),
@@ -56,5 +67,26 @@ class Settings extends ConsumerWidget {
         );
       },
     );
+  }
+
+  Future<void> _exportLogs() async {
+    try {
+      final logOutput = await FileLogOutput.create(); // Initialize log output
+      final logFile = await logOutput.getLogFile();
+
+      // Debug: Print the log file path
+      logger.i("Log file path: ${logFile.path}");
+
+      // Check if the log file exists
+      if (await logFile.exists()) {
+        await Share.shareXFiles([XFile(logFile.path)],
+            text: 'Exported log file');
+        logger.i("Logs successfully shared for export");
+      } else {
+        logger.w("Log file not found for export");
+      }
+    } catch (e) {
+      logger.e("Error exporting logs: $e");
+    }
   }
 }

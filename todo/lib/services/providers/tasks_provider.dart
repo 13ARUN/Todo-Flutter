@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo/services/api/task_api_service.dart';
 import 'package:todo/models/task_model.dart';
+import 'package:todo/services/api/task_api_service.dart';
 import 'package:todo/services/database/database_methods.dart';
 import 'package:todo/utils/logger/logger.dart';
 import 'package:todo/utils/snackbar/snackbar_service.dart';
@@ -20,10 +20,10 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
 
   void _loadTasksfromAPI() async {
     await _db.fetchAndStoreTodos();
-    await _loadTasks();
+    await _loadTasksfromDB();
   }
 
-  Future<void> _loadTasks() async {
+  Future<void> _loadTasksfromDB() async {
     isLoading = true;
     try {
       logger.i("Loading tasks from database...");

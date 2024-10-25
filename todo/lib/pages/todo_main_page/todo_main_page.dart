@@ -6,6 +6,7 @@ import 'package:todo/pages/settings_page/settings.dart';
 import 'package:todo/pages/task_input_page/task_input.dart';
 import 'package:todo/pages/todo_main_page/taskview/task_list.dart';
 import 'package:todo/services/providers/tasks_provider.dart';
+import 'package:todo/theme/theme_data.dart';
 
 part 'app_bar.dart';
 part 'delete_dialog.dart';
@@ -19,13 +20,18 @@ class TodoMainPage extends ConsumerWidget {
     final taskNotifier = ref.watch(tasksProvider.notifier);
     final tasks = ref.watch(tasksProvider);
 
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: buildAppBar(context, ref),
         floatingActionButton: buildFloatingButton(context, ref),
         body: SafeArea(
-          child: taskNotifier.isLoading ? _buildShimmerEffect() : _buildTaskTabs(tasks),
+          child: taskNotifier.isLoading
+              ? _buildShimmerEffect(isDarkMode)
+              : _buildTaskTabs(tasks),
         ),
       ),
     );
@@ -46,18 +52,18 @@ class TodoMainPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildShimmerEffect() {
+  Widget _buildShimmerEffect(bool isDarkMode) {
     return TabBarView(
       physics: const BouncingScrollPhysics(),
       children: [
-        _buildShimmerList(),
-        _buildShimmerList(),
-        _buildShimmerList(),
+        _buildShimmerList(isDarkMode),
+        _buildShimmerList(isDarkMode),
+        _buildShimmerList(isDarkMode),
       ],
     );
   }
 
-  Widget _buildShimmerList() {
+  Widget _buildShimmerList(bool isDarkMode) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: ListView.builder(
@@ -66,32 +72,51 @@ class TodoMainPage extends ConsumerWidget {
           return Container(
             margin: const EdgeInsets.all(8),
             child: Shimmer.fromColors(
-              baseColor: Colors.grey[600]!,
-              highlightColor: Colors.grey[400]!,
+              baseColor: isDarkMode ? Colors.grey[700]! : Colors.grey[200]!,
+              highlightColor:
+                  isDarkMode ? Colors.grey[500]! : Colors.grey[300]!,
               child: ListTile(
                 title: Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Container(
-                    height: 20.0,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 15.0,
+                        width: 300,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
                   ),
                 ),
                 subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 10.0,bottom: 5.0),
-                  child: Container(
-                    height: 15.0,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                  padding: const EdgeInsets.only(top: 15.0, bottom: 8.0),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 12.0,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
                   ),
                 ),
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                tileColor: Colors.grey[800],
+                tileColor: isDarkMode
+                    ? Colors.grey[900]
+                    : lightColorScheme.primaryContainer,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
