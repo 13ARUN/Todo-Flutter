@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:todo/services/providers/theme_provider.dart';
 import 'package:todo/utils/logger/log_output.dart';
 import 'package:todo/utils/logger/logger.dart';
-import 'package:todo/services/providers/theme_provider.dart';
 
 part 'theme_option_widget.dart';
 part 'theme_selection_dialog.dart';
@@ -40,10 +40,11 @@ class Settings extends ConsumerWidget {
                 _showThemeSelectionDialog(context, ref, themeMode);
               },
             ),
-            const Divider(),
+            const Text('Logs'),
             ListTile(
               leading: const Icon(Icons.file_download),
               title: const Text('Export Logs'),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 15),
               onTap: () async {
                 logger.i("Export Logs clicked");
                 await _exportLogs();
