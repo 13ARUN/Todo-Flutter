@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/models/task_model.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:todo/utils/logger/logger.dart';
 import 'package:todo/services/providers/tasks_provider.dart';
+import 'package:todo/utils/logger/logger.dart';
 
 part 'buttons.dart';
-part 'date_picker.dart';
 part 'form_fields.dart';
 
 class TaskInput extends ConsumerStatefulWidget {
@@ -19,8 +18,6 @@ class TaskInput extends ConsumerStatefulWidget {
   final String action;
   final TaskModel? task;
 
-  
-
   @override
   ConsumerState<TaskInput> createState() => _TaskInputState();
 }
@@ -29,7 +26,6 @@ class _TaskInputState extends ConsumerState<TaskInput> {
   final _formGlobalKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _dueDateController = TextEditingController();
 
   static final logger = getLogger('_TaskInputState');
 
@@ -43,7 +39,6 @@ class _TaskInputState extends ConsumerState<TaskInput> {
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
-    _dueDateController.dispose();
     super.dispose();
   }
 
@@ -52,10 +47,12 @@ class _TaskInputState extends ConsumerState<TaskInput> {
       final task = widget.task!;
       _titleController.text = task.title;
       _descriptionController.text = task.description;
-      _dueDateController.text = task.date;
-    } else {
-      _dueDateController.text = _formatDate(DateTime.now());
     }
+  }
+
+  String _formatDate(DateTime date) {
+    final DateFormat formatter = DateFormat('MMM dd, yyyy');
+    return formatter.format(date);
   }
 
   //* Return Task Inputs
@@ -63,13 +60,14 @@ class _TaskInputState extends ConsumerState<TaskInput> {
     logger.t("Executing _submitTaskData method");
     final enteredTitle = _titleController.text.trim();
     final enteredDescription = _descriptionController.text.trim();
-    final selectedDate = _dueDateController.text;
 
     final taskToReturn = TaskModel(
       id: widget.action == 'add' ? DateTime.now().toString() : widget.task!.id,
       title: enteredTitle,
       description: enteredDescription,
-      date: selectedDate,
+      date: widget.action == 'add'
+          ? _formatDate(DateTime.now())
+          : widget.task!.date,
       isCompleted: widget.action == 'add' ? false : widget.task!.isCompleted,
     );
 
@@ -110,15 +108,6 @@ class _TaskInputState extends ConsumerState<TaskInput> {
                     _descriptionController,
                   ),
                   const SizedBox(height: 15),
-                  // Task Due Date field
-                  buildDueDateField(
-                    _dueDateController,
-                    () => _selectDate(
-                      context,
-                      _dueDateController,
-                    ),
-                  ),
-                  const SizedBox(height: 25),
                   // Task Form Buttons
                   buildFormButtons(
                     context,
