@@ -5,7 +5,8 @@ Logger getLogger(String classname) {
   return Logger(
     printer: CustomLogPrinter(classname),
     output: FileLogOutput(),
-    level: Level.trace
+    level: Level.trace,
+    filter: MyFilter(),
   );
 }
 

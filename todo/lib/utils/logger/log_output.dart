@@ -18,8 +18,6 @@ class FileLogOutput extends LogOutput {
     final directory = await getApplicationDocumentsDirectory();
     final path = '${directory.path}/logs.txt';
     logFile = File(path);
-
-    // Optional: Write initial log to confirm file creation
     await logFile!.writeAsString('Log file created\n', mode: FileMode.append);
   }
 
@@ -38,4 +36,12 @@ class FileLogOutput extends LogOutput {
     debugPrint(logString);
   }
 }
+
+class MyFilter extends LogFilter {
+  @override
+  bool shouldLog(LogEvent event) {
+    return true;
+  }
+}
+
 

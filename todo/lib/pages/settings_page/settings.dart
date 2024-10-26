@@ -72,13 +72,11 @@ class Settings extends ConsumerWidget {
 
   Future<void> _exportLogs() async {
     try {
-      final logOutput = await FileLogOutput.create(); // Initialize log output
+      final logOutput = await FileLogOutput.create();
       final logFile = await logOutput.getLogFile();
 
-      // Debug: Print the log file path
       logger.i("Log file path: ${logFile.path}");
 
-      // Check if the log file exists
       if (await logFile.exists()) {
         await Share.shareXFiles([XFile(logFile.path)],
             text: 'Exported log file');
