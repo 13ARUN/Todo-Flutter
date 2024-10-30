@@ -8,9 +8,9 @@ AppBar buildAppBar(BuildContext context, WidgetRef ref) {
     titleSpacing: 25,
     actions: [
       IconButton(
-          onPressed: () {
-            ref.read(tasksProvider.notifier).loadTasksfromAPI();
-            SnackbarService.displaySnackBar('Fetched the latest tasks');
+          onPressed: () async {
+            await ref.read(tasksProvider.notifier).loadTasksfromAPI();
+            SnackbarService.displaySnackBar('Fetched the latest tasks.');
           },
           icon: const Icon(Icons.refresh_rounded)),
       _buildPopupMenu(context, ref)

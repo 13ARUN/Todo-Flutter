@@ -18,7 +18,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
 
   final DatabaseMethods _db = DatabaseMethods();
 
-  void loadTasksfromAPI() async {
+  Future<void> loadTasksfromAPI() async {
     await _db.fetchAndStoreTodos();
     await _loadTasksfromDB();
   }
