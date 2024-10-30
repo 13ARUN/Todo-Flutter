@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/todo_main_page/taskview/task_item.dart';
+import 'package:todo/utils/logger/logger.dart';
 
 class TaskList extends StatelessWidget {
   const TaskList({
@@ -8,10 +9,12 @@ class TaskList extends StatelessWidget {
     required this.tasklist,
   });
 
+  static final logger = getLogger('TaskList');
   final List<TaskModel> tasklist;
 
   @override
   Widget build(BuildContext context) {
+    logger.t("Build Method Executing");
     return Padding(
       padding: const EdgeInsets.all(10),
       child: ListView.builder(

@@ -7,6 +7,7 @@ import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/task_input_page/task_input.dart';
 import 'package:todo/theme/theme_data.dart';
 import 'package:todo/services/providers/tasks_provider.dart';
+import 'package:todo/utils/logger/logger.dart';
 
 class TaskItem extends ConsumerWidget {
   const TaskItem({
@@ -14,11 +15,14 @@ class TaskItem extends ConsumerWidget {
     required this.task,
   });
 
+  static final logger = getLogger('TaskItem');
   final TaskModel task;
 
   Future<void> _showDeleteConfirmation(
       BuildContext context, WidgetRef ref) async {
+        logger.t("Executing _showDeleteConfirmation method");
     if (Platform.isIOS) {
+      logger.i("Displaying cupertino alert dialog");
       showCupertinoDialog<bool>(
         context: context,
         builder: (ctx) => CupertinoAlertDialog(
@@ -43,6 +47,7 @@ class TaskItem extends ConsumerWidget {
         ),
       );
     } else {
+      logger.i("Displaying material alert dialog");
       showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -69,6 +74,7 @@ class TaskItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logger.t("Build Method Executing");
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
@@ -76,6 +82,7 @@ class TaskItem extends ConsumerWidget {
       onTap: task.isCompleted
           ? null
           : () async {
+              logger.i("Clicked on task with Task ID: ${task.id} to edit");
               final editedTask = await Navigator.push<TaskModel>(
                 context,
                 MaterialPageRoute(

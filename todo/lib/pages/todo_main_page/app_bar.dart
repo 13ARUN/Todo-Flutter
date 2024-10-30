@@ -6,7 +6,15 @@ AppBar buildAppBar(BuildContext context, WidgetRef ref) {
   return AppBar(
     title: const Text('Task Manager'),
     titleSpacing: 25,
-    actions: [_buildPopupMenu(context, ref)],
+    actions: [
+      IconButton(
+          onPressed: () {
+            ref.read(tasksProvider.notifier).loadTasksfromAPI();
+            SnackbarService.displaySnackBar('Fetched the latest tasks');
+          },
+          icon: const Icon(Icons.refresh_rounded)),
+      _buildPopupMenu(context, ref)
+    ],
     bottom: TabBar(
       tabs: [
         Tab(
@@ -42,6 +50,16 @@ Widget _buildPopupMenu(BuildContext context, WidgetRef ref) {
           },
         ),
       ),
+      // PopupMenuItem(
+      //   child: ListTile(
+      //     leading: const Icon(Icons.refresh),
+      //     title: const Text('Refresh'),
+      //     onTap: () {
+      //       Navigator.pop(context);
+      //       ref.read(tasksProvider.notifier).loadTasksfromAPI();
+      //     },
+      //   ),
+      // ),
       if (ref.read(tasksProvider).isNotEmpty)
         PopupMenuItem(
           child: ListTile(

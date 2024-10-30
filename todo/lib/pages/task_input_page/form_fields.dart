@@ -57,16 +57,3 @@ Widget buildDescriptionField(TextEditingController controller) {
   );
 }
 
-Widget buildDueDateField(
-    TextEditingController controller, Future<void> Function() selectDate) {
-  return TextFormField(
-    controller: controller,
-    readOnly: true,
-    decoration: const InputDecoration(
-      label: Text('Due Date'),
-      hintText: 'Enter Task Due Date',
-      suffixIcon: Icon(Icons.calendar_month),
-    ),
-    onTap: selectDate,
-  );
-}

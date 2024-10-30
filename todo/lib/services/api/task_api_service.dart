@@ -1,5 +1,3 @@
-// services/api/task_api_service.dart
-
 import 'package:dio/dio.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/utils/logger/logger.dart';
@@ -11,7 +9,7 @@ class TaskApiService {
   Future<void> postTodo(TaskModel task) async {
     try {
       logger.i(
-          "Posting todo with title: ${task.title}, description: ${task.description}");
+          "Posting todo with title: ${task.title}, description: ${task.description}, is_completed: ${task.isCompleted} to API");
       final data = {
         'title': task.title,
         'description': task.description,

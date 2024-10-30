@@ -7,6 +7,8 @@ import 'package:todo/pages/task_input_page/task_input.dart';
 import 'package:todo/pages/todo_main_page/taskview/task_list.dart';
 import 'package:todo/services/providers/tasks_provider.dart';
 import 'package:todo/theme/theme_data.dart';
+import 'package:todo/utils/logger/logger.dart';
+import 'package:todo/utils/snackbar/snackbar_service.dart';
 
 part 'app_bar.dart';
 part 'delete_dialog.dart';
@@ -15,8 +17,11 @@ part 'taskview/task_view.dart';
 class TodoMainPage extends ConsumerWidget {
   const TodoMainPage({super.key});
 
+  static final logger = getLogger('TodoMainPage');
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logger.t("Build Method Executing");
     final taskNotifier = ref.watch(tasksProvider.notifier);
     final tasks = ref.watch(tasksProvider);
 
@@ -38,6 +43,7 @@ class TodoMainPage extends ConsumerWidget {
   }
 
   Widget _buildTaskTabs(List<TaskModel> tasks) {
+    logger.t("Executing _buildTaskTabs method");
     return TabBarView(
       physics: const BouncingScrollPhysics(),
       children: [
@@ -53,6 +59,7 @@ class TodoMainPage extends ConsumerWidget {
   }
 
   Widget _buildShimmerEffect(bool isDarkMode) {
+    logger.t("Executing _buildShimmerEffect method");
     return TabBarView(
       physics: const BouncingScrollPhysics(),
       children: [
@@ -64,6 +71,7 @@ class TodoMainPage extends ConsumerWidget {
   }
 
   Widget _buildShimmerList(bool isDarkMode) {
+    logger.t("Executing _buildShimmerList method");
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: ListView.builder(
@@ -138,8 +146,10 @@ class TodoMainPage extends ConsumerWidget {
 
   FloatingActionButton buildFloatingButton(
       BuildContext context, WidgetRef ref) {
+        logger.t("Executing buildFloatingButton method");
     return FloatingActionButton(
       onPressed: () async {
+        logger.i("Add task floating action button clicked");
         final newTask = await Navigator.push<TaskModel>(
           context,
           MaterialPageRoute(
