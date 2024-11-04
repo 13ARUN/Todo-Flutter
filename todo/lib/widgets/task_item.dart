@@ -20,7 +20,7 @@ class TaskItem extends ConsumerWidget {
 
   Future<void> _showDeleteConfirmation(
       BuildContext context, WidgetRef ref) async {
-        logger.t("Executing _showDeleteConfirmation method");
+    logger.t("Executing _showDeleteConfirmation method");
     if (Platform.isIOS) {
       logger.i("Displaying cupertino alert dialog");
       showCupertinoDialog<bool>(
@@ -28,7 +28,8 @@ class TaskItem extends ConsumerWidget {
         builder: (ctx) => CupertinoAlertDialog(
           title: const Text('Delete Task'),
           content: Text(
-              "Are you sure you want to delete the task '${task.title}' ?"),
+            "Are you sure you want to delete the task '${task.title}' ?",
+          ),
           actions: [
             CupertinoDialogAction(
               isDefaultAction: true,
@@ -53,7 +54,8 @@ class TaskItem extends ConsumerWidget {
         builder: (ctx) => AlertDialog(
           title: const Text('Delete Task'),
           content: Text(
-              "Are you sure you want to delete the task '${task.title}' ?"),
+            "Are you sure you want to delete the task '${task.title}' ?",
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),

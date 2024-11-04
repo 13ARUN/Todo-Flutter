@@ -9,7 +9,8 @@ class TaskApiService {
   Future<void> postTodo(TaskModel task) async {
     try {
       logger.i(
-          "Posting todo with title: ${task.title}, description: ${task.description}, is_completed: ${task.isCompleted} to API");
+        "Posting todo with title: ${task.title}, description: ${task.description}, is_completed: ${task.isCompleted} to API",
+      );
       final data = {
         'title': task.title,
         'description': task.description,

@@ -95,7 +95,6 @@ class _TaskInputState extends ConsumerState<TaskInput> {
               key: _formGlobalKey,
               child: Column(
                 children: [
-                  // Task Title field
                   buildTitleField(
                     _titleController,
                     widget.action,
@@ -103,12 +102,10 @@ class _TaskInputState extends ConsumerState<TaskInput> {
                     existingTasks,
                   ),
                   const SizedBox(height: 15),
-                  // Task Description field
                   buildDescriptionField(
                     _descriptionController,
                   ),
                   const SizedBox(height: 15),
-                  // Task Form Buttons
                   buildFormButtons(
                     context,
                     _formGlobalKey,

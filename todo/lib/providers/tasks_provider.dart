@@ -93,7 +93,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       logger.e("Unable to delete task with id: $id", error: e);
       SnackbarService.displaySnackBar(
           'Unable to delete this task. Please try again.');
-      state = [...state, taskBackup]; // Restore state on failure
+      state = [...state, taskBackup];
     }
   }
 
@@ -145,7 +145,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
         logger.e("Error updating task: $updatedTask", error: e);
         SnackbarService.displaySnackBar('Error updating task');
       } finally {
-        isLoading = false; // End loading
+        isLoading = false;
       }
     } else {
       logger.w("Task with id: ${task.id} not found for toggling completion.");
@@ -187,7 +187,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
       logger.e("Unable to delete all tasks", error: e);
       SnackbarService.displaySnackBar(
           'Unable to delete all tasks. Please try again.');
-      state = tasksBackup; // Restore state on failure
+      state = tasksBackup;
     } finally {
       isLoading = false;
     }

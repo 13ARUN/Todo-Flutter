@@ -13,10 +13,13 @@ Future<void> confirmDelete(
 Widget buildDeleteDialog(
     BuildContext context, WidgetRef ref, bool isDeleteAll) {
   return AlertDialog(
-    title: Text(isDeleteAll ? "Confirm Delete All" : "Confirm Delete Completed"),
-    content: Text(isDeleteAll
-        ? "Are you sure you want to delete all tasks?"
-        : "Are you sure you want to delete all completed tasks? This action cannot be undone."),
+    title:
+        Text(isDeleteAll ? "Confirm Delete All" : "Confirm Delete Completed"),
+    content: Text(
+      isDeleteAll
+          ? "Are you sure you want to delete all tasks?"
+          : "Are you sure you want to delete all completed tasks? This action cannot be undone.",
+    ),
     actions: [
       TextButton(
         onPressed: () {

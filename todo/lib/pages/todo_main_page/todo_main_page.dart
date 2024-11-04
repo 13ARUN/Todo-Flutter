@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shimmer/shimmer.dart'; // Import the shimmer package
+import 'package:shimmer/shimmer.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/settings_page/settings.dart';
 import 'package:todo/pages/task_input_page/task_input.dart';
@@ -146,7 +146,7 @@ class TodoMainPage extends ConsumerWidget {
 
   FloatingActionButton buildFloatingButton(
       BuildContext context, WidgetRef ref) {
-        logger.t("Executing buildFloatingButton method");
+    logger.t("Executing buildFloatingButton method");
     return FloatingActionButton(
       onPressed: () async {
         logger.i("Add task floating action button clicked");
