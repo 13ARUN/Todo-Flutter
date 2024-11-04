@@ -5,12 +5,12 @@ Logger getLogger(String classname) {
   return Logger(
     printer: CustomLogPrinter(classname),
     output: FileLogOutput(),
-    level: Level.trace,
     filter: MyFilter(),
   );
 }
 
 class CustomLogPrinter extends PrettyPrinter {
+  CustomLogPrinter(this.className);
   final String className;
 
   final Map<Level, String> _colorMap = {
@@ -21,8 +21,6 @@ class CustomLogPrinter extends PrettyPrinter {
     Level.error: '\x1B[31m', // Red
     Level.fatal: '\x1B[35m', // Magenta
   };
-
-  CustomLogPrinter(this.className);
 
   @override
   List<String> log(LogEvent event) {

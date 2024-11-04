@@ -14,6 +14,8 @@ class DataBase {
   static const String columnDate = 'date';
   static const String columnIsCompleted = 'isCompleted';
 
+  // static const String columnNew = 'newColumn';
+
   DataBase._init();
 
   factory DataBase() => _instance;
@@ -43,6 +45,9 @@ class DataBase {
         onCreate: (db, version) async {
           await _createDB(db);
         },
+        // onUpgrade: (db, oldVersion, newVersion) async {
+        //   await _upgradeDB(db, oldVersion, newVersion);
+        // },
       );
     } catch (e) {
       logger.e("Failed to open database: $e");
@@ -70,4 +75,17 @@ class DataBase {
       logger.e("Failed to create tables: $e");
     }
   }
+
+  // onUpgrade Function
+  // Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
+  //   logger.i("Upgrading database from version $oldVersion to $newVersion");
+  //   if (oldVersion < 2) {
+  //     try {
+  //       await db.execute('ALTER TABLE $tableTasks ADD COLUMN $columnNew TEXT');
+  //       logger.i("Database upgraded to version $newVersion with $columnNew");
+  //     } catch (e) {
+  //       logger.e("Failed to upgrade database to version $newVersion: $e");
+  //     }
+  //   }
+  // }
 }

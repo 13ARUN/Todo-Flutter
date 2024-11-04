@@ -4,11 +4,11 @@ import 'package:shimmer/shimmer.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/settings_page/settings.dart';
 import 'package:todo/pages/task_input_page/task_input.dart';
-import 'package:todo/widgets/task_list.dart';
 import 'package:todo/providers/tasks_provider.dart';
 import 'package:todo/theme/theme_data.dart';
 import 'package:todo/utils/logger/logger.dart';
 import 'package:todo/utils/snackbar/snackbar_service.dart';
+import 'package:todo/widgets/task_list.dart';
 
 part 'app_bar.dart';
 part 'delete_dialog.dart';

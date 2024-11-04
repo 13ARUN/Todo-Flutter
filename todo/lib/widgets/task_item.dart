@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/task_input_page/task_input.dart';
-import 'package:todo/theme/theme_data.dart';
 import 'package:todo/providers/tasks_provider.dart';
+import 'package:todo/theme/theme_data.dart';
 import 'package:todo/utils/logger/logger.dart';
 
 class TaskItem extends ConsumerWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/models/task_model.dart';
-import 'package:todo/widgets/task_item.dart';
 import 'package:todo/utils/logger/logger.dart';
+import 'package:todo/widgets/task_item.dart';
 
 class TaskList extends StatelessWidget {
   const TaskList({
