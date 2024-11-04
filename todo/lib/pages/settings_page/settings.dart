@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:todo/providers/theme_provider.dart';
+import 'package:todo/services/database/database_methods.dart';
 import 'package:todo/utils/logger/log_output.dart';
 import 'package:todo/utils/logger/logger.dart';
 
@@ -40,7 +43,7 @@ class Settings extends ConsumerWidget {
                 _showThemeSelectionDialog(context, ref, themeMode);
               },
             ),
-            const Text('Logs'),
+            const Text('Advanced'),
             ListTile(
               leading: const Icon(Icons.file_download),
               title: const Text('Export Logs'),
@@ -48,6 +51,15 @@ class Settings extends ConsumerWidget {
               onTap: () async {
                 logger.i("Export Logs clicked");
                 await _exportLogs();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share),
+              title: const Text('Share Todos'),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+              onTap: () async {
+                logger.i("Export Todos clicked");
+                await _exportTodos();
               },
             ),
           ],
@@ -86,6 +98,27 @@ class Settings extends ConsumerWidget {
       }
     } catch (e) {
       logger.e("Error exporting logs: $e");
+    }
+  }
+
+  Future<void> _exportTodos() async {
+    try {
+      final databaseMethods = DatabaseMethods();
+      await databaseMethods.exportTodos();
+      final directory = await getApplicationDocumentsDirectory();
+      final todoFile = File('${directory.path}/exported_tasks.json');
+
+      logger.i("Todo file path: ${todoFile.path}");
+
+      if (await todoFile.exists()) {
+        await Share.shareXFiles([XFile(todoFile.path)],
+            text: 'Exported todo JSON file');
+        logger.i("Todos successfully shared for export");
+      } else {
+        logger.w("Todo file not found for export");
+      }
+    } catch (e) {
+      logger.e("Error exporting todos: $e");
     }
   }
 }
