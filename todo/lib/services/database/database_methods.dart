@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/services/database/database.dart';
 import 'package:todo/utils/logger/logger.dart';
@@ -138,21 +134,6 @@ class DatabaseMethods {
       }
     } catch (e) {
       logger.e("Error deleting tasks: $e");
-    }
-  }
-
-  Future<void> exportTodos() async {
-    final tasks = await getTasks();
-    final taskJsonList = tasks.map((task) => task.toMap()).toList();
-    final jsonString = jsonEncode(taskJsonList);
-
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/exported_tasks.json');
-      await file.writeAsString(jsonString);
-      logger.i("Tasks successfully exported to ${file.path}");
-    } catch (e) {
-      logger.e("Error exporting tasks: $e");
     }
   }
 

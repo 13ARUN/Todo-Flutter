@@ -1,7 +1,10 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 import 'package:todo/providers/theme_provider.dart';
 import 'package:todo/services/database/database_methods.dart';
@@ -54,12 +57,12 @@ class Settings extends ConsumerWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.share),
-              title: const Text('Share Todos'),
+              leading: const Icon(Icons.picture_as_pdf_sharp),
+              title: const Text('Share Todos as PDF'),
               contentPadding: const EdgeInsets.symmetric(horizontal: 15),
               onTap: () async {
                 logger.i("Export Todos clicked");
-                await _exportTodos();
+                await _exportTodosAsPDF();
               },
             ),
           ],
@@ -101,24 +104,71 @@ class Settings extends ConsumerWidget {
     }
   }
 
-  Future<void> _exportTodos() async {
+  Future<void> _exportTodosAsPDF() async {
     try {
       final databaseMethods = DatabaseMethods();
-      await databaseMethods.exportTodos();
+      final tasks = await databaseMethods.getTasks();
+      final pdf = pw.Document();
+
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text('Todos', style: const pw.TextStyle(fontSize: 24)),
+                pw.SizedBox(height: 20),
+                ...tasks.map(
+                  (task) {
+                    return pw.Row(
+                      children: [
+                        pw.Expanded(
+                          child: pw.Text(
+                            task.title,
+                            style: const pw.TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        pw.Expanded(
+                          child: pw.Text(
+                            task.description,
+                            style: const pw.TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        pw.Text(
+                          task.isCompleted == true
+                              ? 'Completed'
+                              : 'Not Completed',
+                          style: pw.TextStyle(
+                              fontSize: 16,
+                              color: task.isCompleted
+                                  ? const PdfColor(0.0, 1.0, 0.0)
+                                  : const PdfColor(1.0, 0.0, 0.0)),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+      );
+
       final directory = await getApplicationDocumentsDirectory();
-      final todoFile = File('${directory.path}/exported_tasks.json');
+      final file = File('${directory.path}/exported_todos.pdf');
+      await file.writeAsBytes(await pdf.save());
 
-      logger.i("Todo file path: ${todoFile.path}");
+      logger.i("Todo PDF file path: ${file.path}");
 
-      if (await todoFile.exists()) {
-        await Share.shareXFiles([XFile(todoFile.path)],
-            text: 'Exported todo JSON file');
-        logger.i("Todos successfully shared for export");
+      if (await file.exists()) {
+        await Share.shareXFiles([XFile(file.path)],
+            text: 'Exported todos as PDF');
+        logger.i("Todos successfully shared for export as PDF");
       } else {
-        logger.w("Todo file not found for export");
+        logger.w("Todo PDF file not found for export");
       }
     } catch (e) {
-      logger.e("Error exporting todos: $e");
+      logger.e("Error exporting todos as PDF: $e");
     }
   }
 }
