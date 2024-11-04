@@ -1,4 +1,4 @@
-part of '../todo_main_page.dart';
+part of 'todo_main_page.dart';
 
 Widget tasksView(List<TaskModel> tasks) {
   return TaskList(
