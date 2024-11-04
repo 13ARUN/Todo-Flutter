@@ -22,7 +22,11 @@ class DataBase {
     if (_database != null) return _database!;
     logger.t("Entering database get method");
     logger.i("Initializing database");
-    _database = await _initializeDB('tasks.db');
+    try {
+      _database = await _initializeDB('tasks.db');
+    } catch (e) {
+      logger.e("Database initialization failed: $e");
+    }
     return _database!;
   }
 
@@ -32,13 +36,18 @@ class DataBase {
     logger.i("Database initialized");
     logger.d("Initialized Database Path: $path");
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await _createDB(db);
-      },
-    );
+    try {
+      return await openDatabase(
+        path,
+        version: 1,
+        onCreate: (db, version) async {
+          await _createDB(db);
+        },
+      );
+    } catch (e) {
+      logger.e("Failed to open database: $e");
+      rethrow;
+    }
   }
 
   Future<void> _createDB(Database db) async {
@@ -54,7 +63,11 @@ class DataBase {
       );
     ''';
 
-    await db.execute(createTableSQL);
-    logger.i("Tables created");
+    try {
+      await db.execute(createTableSQL);
+      logger.i("Tables created");
+    } catch (e) {
+      logger.e("Failed to create tables: $e");
+    }
   }
 }
