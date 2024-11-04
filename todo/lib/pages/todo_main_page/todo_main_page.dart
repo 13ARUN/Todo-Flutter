@@ -5,7 +5,7 @@ import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/settings_page/settings.dart';
 import 'package:todo/pages/task_input_page/task_input.dart';
 import 'package:todo/pages/todo_main_page/taskview/task_list.dart';
-import 'package:todo/services/providers/tasks_provider.dart';
+import 'package:todo/providers/tasks_provider.dart';
 import 'package:todo/theme/theme_data.dart';
 import 'package:todo/utils/logger/logger.dart';
 import 'package:todo/utils/snackbar/snackbar_service.dart';

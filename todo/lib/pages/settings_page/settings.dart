@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:todo/services/providers/theme_provider.dart';
+import 'package:todo/providers/theme_provider.dart';
 import 'package:todo/utils/logger/log_output.dart';
 import 'package:todo/utils/logger/logger.dart';
 

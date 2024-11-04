@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/models/task_model.dart';
-import 'package:todo/services/providers/tasks_provider.dart';
+import 'package:todo/providers/tasks_provider.dart';
 import 'package:todo/utils/logger/logger.dart';
 
 part 'buttons.dart';
