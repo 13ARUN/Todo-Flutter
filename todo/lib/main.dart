@@ -34,7 +34,7 @@ class MyApp extends ConsumerWidget {
     // Watches the theme provider to determine the current theme mode.
     final themeMode = ref.watch(themeProvider);
 
-    checkFirstLaunch(context);
+    checkFirstLaunch(context); // For displaying showcase
 
     // Builds the MaterialApp widget with specified properties.
     return MaterialApp(

@@ -47,7 +47,7 @@ class TodoMainPage extends ConsumerWidget {
           key: addTaskKey,
           title: 'Add Task',
           description: 'Tap here to add a new task.',
-          targetBorderRadius: BorderRadius.circular(15),
+          targetBorderRadius: BorderRadius.circular(16),
           child: buildFloatingButton(context, ref),
         ), // Floating button to add new tasks
         body: SafeArea(

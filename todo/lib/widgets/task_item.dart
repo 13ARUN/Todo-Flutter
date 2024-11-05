@@ -152,7 +152,7 @@ class TaskItem extends ConsumerWidget {
               ? darkColorScheme.surfaceContainerLow
               : lightColorScheme.surfaceContainerHigh
           : isDarkMode
-              ? darkColorScheme.onPrimaryFixedVariant
+              ? darkColorScheme.inversePrimary
               : lightColorScheme.primaryFixedDim,
     );
   }
