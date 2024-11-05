@@ -2,8 +2,13 @@ part of 'todo_main_page.dart';
 
 /// Builds a view for displaying a list of tasks.
 ///
-/// Takes a list of [TaskModel] tasks and returns a [TaskList] widget
-/// containing the provided tasks.
+/// This function takes a list of [TaskModel] tasks and returns a
+/// [TaskList] widget containing the provided tasks.
+///
+/// The [tasks] parameter should not be null and must contain the
+/// tasks to be displayed.
+///
+/// Returns a [TaskList] widget with the given tasks.
 Widget tasksView(List<TaskModel> tasks) {
   return TaskList(
     tasklist: tasks,
@@ -16,8 +21,10 @@ Widget tasksView(List<TaskModel> tasks) {
 /// based on the state of the [tasks] list. It checks if there are no tasks,
 /// if there are no in-progress tasks, or if there are no completed tasks.
 ///
-/// Returns a [Column] widget that centers the image and message
-/// on the screen.
+/// The [tasks] parameter should not be null and must represent the list
+/// of tasks to evaluate.
+///
+/// Returns a [Column] widget that centers the image and message on the screen.
 Widget noTasksView(List<TaskModel> tasks) {
   String imageName;
   String message;

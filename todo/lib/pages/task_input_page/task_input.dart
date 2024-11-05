@@ -9,6 +9,10 @@ part 'buttons.dart';
 part 'form_fields.dart';
 
 /// A widget that allows users to input and edit task details.
+///
+/// This widget is used to create a new task or edit an existing task.
+/// It provides input fields for the task's title and description,
+/// as well as buttons to submit the data.
 class TaskInput extends ConsumerStatefulWidget {
   const TaskInput({
     super.key,
@@ -17,9 +21,15 @@ class TaskInput extends ConsumerStatefulWidget {
   });
 
   /// The action to perform, either 'add' or 'edit'.
+  ///
+  /// - 'add': Indicates that a new task is being created.
+  /// - 'edit': Indicates that an existing task is being modified.
   final String action;
 
   /// The task to be edited, if applicable.
+  ///
+  /// This optional parameter is used only when the action is 'edit'.
+  /// It contains the details of the task to be modified.
   final TaskModel? task;
 
   @override
@@ -59,6 +69,8 @@ class _TaskInputState extends ConsumerState<TaskInput> {
   }
 
   /// Formats the date into a more readable string format.
+  ///
+  /// This method takes a [DateTime] object and returns a formatted date string.
   String _formatDate(DateTime date) {
     final DateFormat formatter = DateFormat('MMM dd, yyyy');
     return formatter.format(date); // Return the formatted date string.
@@ -74,16 +86,17 @@ class _TaskInputState extends ConsumerState<TaskInput> {
 
     final taskToReturn = TaskModel(
       id: widget.action == 'add'
-          ? DateTime.now().toString()
-          : widget.task!.id, // Use a new ID if adding a task.
+          ? '' // ID will be created by API.
+          : widget.task!.id,
       title: enteredTitle, // Set the title for the task.
       description: enteredDescription, // Set the description for the task.
       date: widget.action == 'add'
-          ? _formatDate(DateTime.now()) // Format the date if adding a new task.
+          ? _formatDate(
+              DateTime.now()) // Will be replaced by creation date from API
           : widget.task!.date, // Keep the existing date if editing.
       isCompleted: widget.action == 'add'
           ? false
-          : widget.task!.isCompleted, // Set completion status.
+          : widget.task!.isCompleted, // Keep completion status.
     );
 
     Navigator.pop(context,
@@ -95,6 +108,7 @@ class _TaskInputState extends ConsumerState<TaskInput> {
     logger.t("Build Method Executing");
     final existingTasks =
         ref.watch(tasksProvider); // Watch for existing tasks in the provider.
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -106,10 +120,7 @@ class _TaskInputState extends ConsumerState<TaskInput> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 25,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
             child: Form(
               key: _formGlobalKey, // Assign the global key to the form.
               child: Column(

@@ -8,7 +8,7 @@ class TaskModel {
   final String date; // Formatted date when the task is created.
   final bool isCompleted; // Indicates whether the task is completed.
 
-  /// Creates a [TaskModel] instance with required fields.
+  ///  Creates a [TaskModel] instance with required fields.
   TaskModel({
     required this.id,
     required this.title,

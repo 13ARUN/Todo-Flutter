@@ -8,7 +8,7 @@ part 'theme_option_widget.dart';
 part 'theme_selection_dialog.dart';
 
 /// A settings screen that allows users to configure app preferences,
-/// including theme selection and log exports.
+/// including theme selection, share todos and log exports.
 ///
 /// This widget is a [ConsumerWidget] that utilizes Riverpod for state management.
 /// It displays options for changing the app's theme and exporting logs or todos.
