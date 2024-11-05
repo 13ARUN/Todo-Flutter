@@ -5,8 +5,7 @@ import 'package:todo/pages/todo_main_page/todo_main_page.dart';
 
 Future<void> checkFirstLaunch(BuildContext context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  // bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
-  bool isFirstLaunch = true;
+  bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
 
   if (isFirstLaunch) {
     // Show the showcase view only on the first launch
