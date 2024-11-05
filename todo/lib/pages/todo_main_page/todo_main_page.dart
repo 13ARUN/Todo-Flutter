@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:todo/models/task_model.dart';
 import 'package:todo/pages/settings_page/settings.dart';
 import 'package:todo/pages/task_input_page/task_input.dart';
@@ -23,6 +24,10 @@ class TodoMainPage extends ConsumerWidget {
   const TodoMainPage({super.key});
 
   static final logger = getLogger('TodoMainPage');
+  static final GlobalKey addTaskKey = GlobalKey();
+  static final GlobalKey allTasksKey = GlobalKey();
+  static final GlobalKey refreshTasksKey = GlobalKey();
+  static final GlobalKey popupMenuKey = GlobalKey();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,9 +41,15 @@ class TodoMainPage extends ConsumerWidget {
     return DefaultTabController(
       length: 3, // Number of tabs for all, in-progress, and completed tasks
       child: Scaffold(
-        appBar: buildAppBar(context, ref), // Builds the app bar
-        floatingActionButton: buildFloatingButton(
-            context, ref), // Floating button to add new tasks
+        appBar: buildAppBar(
+            context, ref, refreshTasksKey, popupMenuKey), // Builds the app bar
+        floatingActionButton: Showcase(
+          key: addTaskKey,
+          title: 'Add Task',
+          description: 'Tap here to add a new task.',
+          targetBorderRadius: BorderRadius.circular(15),
+          child: buildFloatingButton(context, ref),
+        ), // Floating button to add new tasks
         body: SafeArea(
           child: taskNotifier.isLoading
               ? _buildShimmerEffect(
@@ -60,9 +71,12 @@ class TodoMainPage extends ConsumerWidget {
     return TabBarView(
       physics: const BouncingScrollPhysics(),
       children: [
-        tasks.isNotEmpty
-            ? tasksView(tasks)
-            : noTasksView(tasks), // View for all tasks
+        Showcase(
+          key: allTasksKey,
+          title: 'All Tasks',
+          description: 'View all your tasks here.',
+          child: tasks.isNotEmpty ? tasksView(tasks) : noTasksView(tasks),
+        ),
         getInProgressTasks(tasks).isNotEmpty
             ? tasksView(getInProgressTasks(tasks)) // View for in-progress tasks
             : noTasksView(tasks),

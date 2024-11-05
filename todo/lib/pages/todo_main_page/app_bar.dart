@@ -9,7 +9,11 @@ part of 'todo_main_page.dart';
 /// Parameters:
 /// - [context]: The BuildContext for the app bar.
 /// - [ref]: The WidgetRef to access the tasks provider.
-AppBar buildAppBar(BuildContext context, WidgetRef ref) {
+AppBar buildAppBar(
+    BuildContext context,
+    WidgetRef ref,
+    GlobalKey<State<StatefulWidget>> refreshTasksKey,
+    GlobalKey<State<StatefulWidget>> popupMenuKey) {
   final width = MediaQuery.of(context).size.width;
 
   return AppBar(
@@ -17,13 +21,23 @@ AppBar buildAppBar(BuildContext context, WidgetRef ref) {
     titleSpacing: 25,
     actions: [
       // Button to refresh tasks from the API
-      IconButton(
-          onPressed: () async {
-            await ref.read(tasksProvider.notifier).loadTasksfromAPI();
-            SnackbarService.displaySnackBar('Fetched the latest tasks.');
-          },
-          icon: const Icon(Icons.refresh_rounded)),
-      _buildPopupMenu(context, ref)
+      Showcase(
+        key: refreshTasksKey,
+        title: 'Refresh',
+        description: 'Click to get latest tasks',
+        child: IconButton(
+            onPressed: () async {
+              await ref.read(tasksProvider.notifier).loadTasksfromAPI();
+              SnackbarService.displaySnackBar('Fetched the latest tasks.');
+            },
+            icon: const Icon(Icons.refresh_rounded)),
+      ),
+      Showcase(
+        key: popupMenuKey,
+        title: 'Menu',
+        description: 'More actions can be accessed here',
+        child: _buildPopupMenu(context, ref),
+      )
     ],
     bottom: TabBar(
       tabs: [

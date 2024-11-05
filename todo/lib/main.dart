@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:todo/pages/todo_main_page/todo_main_page.dart';
 import 'package:todo/providers/theme_provider.dart';
 import 'package:todo/theme/theme_data.dart';
+import 'package:todo/utils/showcase/showcase.dart';
 import 'package:todo/utils/snackbar/snackbar_service.dart';
 
 /// The entry point of the application.
 /// It runs the [MyApp] widget within a [ProviderScope] to enable
 /// state management using Riverpod.
+// void main() {
+//   runApp(const ProviderScope(child: MyApp()));
+// }
+
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    ShowCaseWidget(
+      builder: (context) => const ProviderScope(child: MyApp()),
+    ),
+  );
 }
 
 /// A stateless widget that represents the main application.
@@ -24,6 +34,8 @@ class MyApp extends ConsumerWidget {
     // Watches the theme provider to determine the current theme mode.
     final themeMode = ref.watch(themeProvider);
 
+    checkFirstLaunch(context);
+
     // Builds the MaterialApp widget with specified properties.
     return MaterialApp(
       title: 'To-Do', // The title of the application.
@@ -36,4 +48,6 @@ class MyApp extends ConsumerWidget {
       home: const TodoMainPage(), // The default home page of the application.
     );
   }
+
+  
 }
