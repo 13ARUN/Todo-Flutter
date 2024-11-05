@@ -26,12 +26,11 @@ class MyApp extends ConsumerWidget {
 
     // Builds the MaterialApp widget with specified properties.
     return MaterialApp(
-      title: 'To-Do', // The title of the application, shown in the app bar.
-      debugShowCheckedModeBanner: false, // Disables the debug banner.
+      title: 'To-Do', // The title of the application.
+      debugShowCheckedModeBanner: false, // Disables the debug banner in debug.
       darkTheme: darkTheme, // Sets the dark theme of the application.
       theme: lightTheme, // Sets the light theme of the application.
-      themeMode:
-          themeMode, // Applies the current theme mode based on user preference.
+      themeMode: themeMode, // Current theme mode based on user preference.
       scaffoldMessengerKey:
           SnackbarService.scaffoldMessengerKey, // Key for displaying snackbars.
       home: const TodoMainPage(), // The default home page of the application.

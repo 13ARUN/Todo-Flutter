@@ -7,7 +7,11 @@ import 'package:todo/utils/logger/logger.dart';
 part 'theme_option_widget.dart';
 part 'theme_selection_dialog.dart';
 
-/// A settings screen that allows users to configure app preferences.
+/// A settings screen that allows users to configure app preferences,
+/// including theme selection and log exports.
+///
+/// This widget is a [ConsumerWidget] that utilizes Riverpod for state management.
+/// It displays options for changing the app's theme and exporting logs or todos.
 class Settings extends ConsumerWidget {
   const Settings({super.key});
 
@@ -74,6 +78,14 @@ class Settings extends ConsumerWidget {
   }
 
   /// Displays a dialog for selecting the app theme.
+  ///
+  /// This method shows a [ThemeSelectionDialog] that allows the user to
+  /// choose between different theme options for the application.
+  ///
+  /// Parameters:
+  /// - [context]: The build context used to display the dialog.
+  /// - [ref]: The [WidgetRef] used to access the theme provider.
+  /// - [themeMode]: The current [ThemeMode] of the application.
   void _showThemeSelectionDialog(
       BuildContext context, WidgetRef ref, ThemeMode themeMode) {
     logger.t("Executing _showThemeSelectionDialog method");

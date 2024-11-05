@@ -1,14 +1,19 @@
 part of 'settings.dart';
 
 /// A dialog that allows users to select a theme for the application.
+///
+/// This dialog presents options for users to choose between system default,
+/// light, and dark themes. It updates the app theme based on user selection.
 class ThemeSelectionDialog extends StatelessWidget {
-  static final logger = getLogger(
-      'ThemeSelectionDialog'); // Logger instance for tracking events in this class
+  static final logger = getLogger('ThemeSelectionDialog');
   final ThemeMode themeMode; // The currently selected theme mode
-  final WidgetRef
-      ref; // Reference to the Riverpod provider for state management
+  final WidgetRef ref; // Reference to the Riverpod for state management
 
   /// Creates a [ThemeSelectionDialog] with the required parameters.
+  ///
+  /// Parameters:
+  /// - [themeMode]: The currently selected [ThemeMode].
+  /// - [ref]: The [WidgetRef] used to access the Riverpod for state management.
   const ThemeSelectionDialog({
     super.key,
     required this.themeMode,
