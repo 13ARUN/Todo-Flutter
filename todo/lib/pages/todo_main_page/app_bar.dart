@@ -24,7 +24,7 @@ AppBar buildAppBar(
       Showcase(
         key: refreshTasksKey,
         title: 'Refresh',
-        description: 'Click to get latest tasks',
+        description: 'Tap to refresh your task list.',
         child: IconButton(
             onPressed: () async {
               await ref.read(tasksProvider.notifier).loadTasksfromAPI();
@@ -35,7 +35,7 @@ AppBar buildAppBar(
       Showcase(
         key: popupMenuKey,
         title: 'Menu',
-        description: 'More actions can be accessed here',
+        description: 'Use this to access more options.',
         child: _buildPopupMenu(context, ref),
       )
     ],

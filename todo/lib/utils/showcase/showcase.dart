@@ -13,8 +13,8 @@ Future<void> checkFirstLaunch(BuildContext context) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   
   // Retrieve the value indicating if this is the first launch.
-  bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
-  // bool isFirstLaunch = true;
+  // bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+  bool isFirstLaunch = true;
 
   if (isFirstLaunch) {
     // Show the showcase tutorial only on the first launch
