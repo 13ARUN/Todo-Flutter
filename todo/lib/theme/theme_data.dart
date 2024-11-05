@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// Define light and dark color schemes based on a seed color.
 final lightColorScheme = ColorScheme.fromSeed(
     seedColor: const Color.fromARGB(255, 108, 58, 184),
     brightness: Brightness.light);
@@ -9,20 +10,25 @@ final darkColorScheme = ColorScheme.fromSeed(
     seedColor: const Color.fromARGB(255, 108, 58, 184),
     brightness: Brightness.dark);
 
+// Define the light theme for the application.
 final ThemeData lightTheme = ThemeData(
   colorScheme: lightColorScheme,
   textTheme: GoogleFonts.poppinsTextTheme().apply(
-    bodyColor: Colors.black,
+    bodyColor: Colors.black, // Set the body text color to black
   ),
 );
 
+// Define the dark theme for the application.
 final ThemeData darkTheme = ThemeData(
   colorScheme: darkColorScheme,
   textTheme: GoogleFonts.poppinsTextTheme().apply(
-    bodyColor: Colors.white,
+    bodyColor: Colors.white, // Set the body text color to white
   ),
 );
 
+// This includes specific styling for AppBar, TabBar, Floating Action Button, etc.
+
+// Uncomment the following code to use a more customized theme setup.
 // final ThemeData lightTheme = ThemeData().copyWith(
 //   textTheme: GoogleFonts.poppinsTextTheme(),
 //   colorScheme: const ColorScheme.light(),
@@ -30,7 +36,7 @@ final ThemeData darkTheme = ThemeData(
 //   appBarTheme: const AppBarTheme().copyWith(
 //     backgroundColor: kColorScheme.onPrimaryFixed,
 //     foregroundColor: kColorScheme.primaryContainer,
-//     toolbarHeight: 65,
+//     toolbarHeight: 65, // Height of the AppBar
 //   ),
 //   tabBarTheme: TabBarTheme(
 //     labelColor: kColorScheme.tertiaryContainer,
@@ -107,6 +113,7 @@ final ThemeData darkTheme = ThemeData(
 //   ),
 // );
 
+// Uncomment the following code to customize the dark theme as well.
 // final ThemeData darkTheme = ThemeData.dark().copyWith(
 //   textTheme: GoogleFonts.poppinsTextTheme(const TextTheme()),
 //   colorScheme: const ColorScheme.dark(),

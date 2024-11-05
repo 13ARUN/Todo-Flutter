@@ -1,5 +1,14 @@
 part of 'todo_main_page.dart';
 
+/// Builds the main [AppBar] for the Todo application.
+///
+/// This function creates an [AppBar] with a title, refresh button, and a
+/// popup menu for additional options. It also includes a [TabBar] to
+/// navigate between different task categories.
+///
+/// Parameters:
+/// - [context]: The BuildContext for the app bar.
+/// - [ref]: The WidgetRef to access the tasks provider.
 AppBar buildAppBar(BuildContext context, WidgetRef ref) {
   final width = MediaQuery.of(context).size.width;
 
@@ -7,6 +16,7 @@ AppBar buildAppBar(BuildContext context, WidgetRef ref) {
     title: const Text('Task Manager'),
     titleSpacing: 25,
     actions: [
+      // Button to refresh tasks from the API
       IconButton(
           onPressed: () async {
             await ref.read(tasksProvider.notifier).loadTasksfromAPI();
@@ -31,6 +41,15 @@ AppBar buildAppBar(BuildContext context, WidgetRef ref) {
   );
 }
 
+/// Builds a popup menu for additional app options.
+///
+/// This widget creates a [PopupMenuButton] that allows the user to access
+/// settings and delete tasks. It displays options for deleting all tasks
+/// or just completed tasks based on the current task list.
+///
+/// Parameters:
+/// - [context]: The BuildContext for the popup menu.
+/// - [ref]: The WidgetRef to access the tasks provider.
 Widget _buildPopupMenu(BuildContext context, WidgetRef ref) {
   return PopupMenuButton(
     position: PopupMenuPosition.under,
@@ -50,6 +69,7 @@ Widget _buildPopupMenu(BuildContext context, WidgetRef ref) {
           },
         ),
       ),
+      // Uncomment if refresh option is needed in the menu
       // PopupMenuItem(
       //   child: ListTile(
       //     leading: const Icon(Icons.refresh),
@@ -60,6 +80,7 @@ Widget _buildPopupMenu(BuildContext context, WidgetRef ref) {
       //     },
       //   ),
       // ),
+      // Show option to delete all tasks if the task list is not empty
       if (ref.read(tasksProvider).isNotEmpty)
         PopupMenuItem(
           child: ListTile(
@@ -71,6 +92,7 @@ Widget _buildPopupMenu(BuildContext context, WidgetRef ref) {
             },
           ),
         ),
+      // Show option to delete completed tasks if there are any
       if (ref.read(tasksProvider).any((task) => task.isCompleted))
         PopupMenuItem(
           child: ListTile(

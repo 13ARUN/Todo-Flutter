@@ -7,6 +7,7 @@ class DataBase {
   static Database? _database;
   final logger = getLogger('DataBase');
 
+  // Database table and column names
   static const String tableTasks = 'tasks';
   static const String columnId = 'id';
   static const String columnTitle = 'title';
@@ -14,24 +15,32 @@ class DataBase {
   static const String columnDate = 'date';
   static const String columnIsCompleted = 'isCompleted';
 
-  // static const String columnNew = 'newColumn';
-
+  // Private constructor for singleton pattern
   DataBase._init();
 
+  // Factory constructor to return the same instance
   factory DataBase() => _instance;
 
+  /// Provides access to the database, initializing it if necessary.
   Future<Database> get database async {
     if (_database != null) return _database!;
+
     logger.t("Entering database get method");
     logger.i("Initializing database");
+
     try {
       _database = await _initializeDB('tasks.db');
     } catch (e) {
       logger.e("Database initialization failed: $e");
     }
+
     return _database!;
   }
 
+  /// Initializes the database and opens it.
+  ///
+  /// Parameters:
+  /// - [filePath]: The name of the database file.
   Future<Database> _initializeDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
@@ -45,6 +54,7 @@ class DataBase {
         onCreate: (db, version) async {
           await _createDB(db);
         },
+        // Uncomment if upgrading the database schema in the future
         // onUpgrade: (db, oldVersion, newVersion) async {
         //   await _upgradeDB(db, oldVersion, newVersion);
         // },
@@ -55,6 +65,10 @@ class DataBase {
     }
   }
 
+  /// Creates the database tables.
+  ///
+  /// Parameters:
+  /// - [db]: The database instance.
   Future<void> _createDB(Database db) async {
     logger.i("Creating tables");
 
@@ -76,7 +90,7 @@ class DataBase {
     }
   }
 
-  // onUpgrade Function
+  // Uncomment this section if database upgrades are needed
   // Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
   //   logger.i("Upgrading database from version $oldVersion to $newVersion");
   //   if (oldVersion < 2) {

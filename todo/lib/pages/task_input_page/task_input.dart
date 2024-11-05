@@ -8,6 +8,7 @@ import 'package:todo/utils/logger/logger.dart';
 part 'buttons.dart';
 part 'form_fields.dart';
 
+/// A widget that allows users to input and edit task details.
 class TaskInput extends ConsumerStatefulWidget {
   const TaskInput({
     super.key,
@@ -15,7 +16,10 @@ class TaskInput extends ConsumerStatefulWidget {
     this.task,
   });
 
+  /// The action to perform, either 'add' or 'edit'.
   final String action;
+
+  /// The task to be edited, if applicable.
   final TaskModel? task;
 
   @override
@@ -32,56 +36,71 @@ class _TaskInputState extends ConsumerState<TaskInput> {
   @override
   void initState() {
     super.initState();
-    _initialData();
+    _initialData(); // Initialize form fields with existing task data if editing.
   }
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
+    _titleController
+        .dispose(); // Dispose of the title controller when not needed.
+    _descriptionController
+        .dispose(); // Dispose of the description controller when not needed.
     super.dispose();
   }
 
+  /// Initializes the input fields with the current task data if in edit mode.
   void _initialData() {
     if (widget.action == 'edit' && widget.task != null) {
       final task = widget.task!;
-      _titleController.text = task.title;
-      _descriptionController.text = task.description;
+      _titleController.text = task.title; // Set the title controller text.
+      _descriptionController.text =
+          task.description; // Set the description controller text.
     }
   }
 
+  /// Formats the date into a more readable string format.
   String _formatDate(DateTime date) {
     final DateFormat formatter = DateFormat('MMM dd, yyyy');
-    return formatter.format(date);
+    return formatter.format(date); // Return the formatted date string.
   }
 
-  //* Return Task Inputs
+  /// Submits the task data and returns it to the previous screen.
   void _submitTaskData() {
     logger.t("Executing _submitTaskData method");
-    final enteredTitle = _titleController.text.trim();
-    final enteredDescription = _descriptionController.text.trim();
+    final enteredTitle =
+        _titleController.text.trim(); // Trim white spaces from title input.
+    final enteredDescription = _descriptionController.text
+        .trim(); // Trim white spaces from description input.
 
     final taskToReturn = TaskModel(
-      id: widget.action == 'add' ? DateTime.now().toString() : widget.task!.id,
-      title: enteredTitle,
-      description: enteredDescription,
+      id: widget.action == 'add'
+          ? DateTime.now().toString()
+          : widget.task!.id, // Use a new ID if adding a task.
+      title: enteredTitle, // Set the title for the task.
+      description: enteredDescription, // Set the description for the task.
       date: widget.action == 'add'
-          ? _formatDate(DateTime.now())
-          : widget.task!.date,
-      isCompleted: widget.action == 'add' ? false : widget.task!.isCompleted,
+          ? _formatDate(DateTime.now()) // Format the date if adding a new task.
+          : widget.task!.date, // Keep the existing date if editing.
+      isCompleted: widget.action == 'add'
+          ? false
+          : widget.task!.isCompleted, // Set completion status.
     );
 
-    Navigator.pop(context, taskToReturn);
+    Navigator.pop(context,
+        taskToReturn); // Return the new or updated task to the previous screen.
   }
 
   @override
   Widget build(BuildContext context) {
     logger.t("Build Method Executing");
-    final existingTasks = ref.watch(tasksProvider);
+    final existingTasks =
+        ref.watch(tasksProvider); // Watch for existing tasks in the provider.
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.action == 'add' ? "Add a new task" : "Update task",
+          widget.action == 'add'
+              ? "Add a new task"
+              : "Update task", // Set the app bar title based on action.
         ),
       ),
       body: SafeArea(
@@ -92,7 +111,7 @@ class _TaskInputState extends ConsumerState<TaskInput> {
               vertical: 25,
             ),
             child: Form(
-              key: _formGlobalKey,
+              key: _formGlobalKey, // Assign the global key to the form.
               child: Column(
                 children: [
                   buildTitleField(
