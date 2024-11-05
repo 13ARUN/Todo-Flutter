@@ -48,6 +48,4 @@ class MyApp extends ConsumerWidget {
       home: const TodoMainPage(), // The default home page of the application.
     );
   }
-
-  
 }

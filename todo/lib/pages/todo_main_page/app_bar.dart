@@ -83,17 +83,6 @@ Widget _buildPopupMenu(BuildContext context, WidgetRef ref) {
           },
         ),
       ),
-      // Uncomment if refresh option is needed in the menu
-      // PopupMenuItem(
-      //   child: ListTile(
-      //     leading: const Icon(Icons.refresh),
-      //     title: const Text('Refresh'),
-      //     onTap: () {
-      //       Navigator.pop(context);
-      //       ref.read(tasksProvider.notifier).loadTasksfromAPI();
-      //     },
-      //   ),
-      // ),
       // Show option to delete all tasks if the task list is not empty
       if (ref.read(tasksProvider).isNotEmpty)
         PopupMenuItem(

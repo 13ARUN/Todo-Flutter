@@ -69,7 +69,7 @@ class TodoMainPage extends ConsumerWidget {
   Widget _buildTaskTabs(List<TaskModel> tasks) {
     logger.t("Executing _buildTaskTabs method");
     return TabBarView(
-      physics: const BouncingScrollPhysics(),
+      // physics: const BouncingScrollPhysics(),
       children: [
         Showcase(
           key: allTasksKey,
