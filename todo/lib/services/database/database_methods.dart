@@ -1,59 +1,64 @@
 import 'package:dio/dio.dart';
 import 'package:todo/models/task_model.dart';
+import 'package:todo/services/api/task_api_service.dart';
 import 'package:todo/services/database/database.dart';
+
 import 'package:todo/utils/logger/logger.dart';
 
 class DatabaseMethods {
   final logger = getLogger('DatabaseMethods');
   final Dio dio = Dio();
+  final TaskApiService taskApiService = TaskApiService();
 
   static const String _tableName = 'tasks';
 
   /// Fetches todos from the API and synchronizes them with the local database.
+  ///
+  /// This method:
+  /// 1. Fetches the task list from the API via the [TaskApiService].
+  /// 2. Retrieves the current task list from the local database.
+  /// 3. Synchronizes the tasks by:
+  ///    - Updating existing tasks that have changed.
+  ///    - Adding new tasks that do not exist in the database.
+  ///    - Deleting tasks from the database that are no longer present in the API.
   Future<void> fetchAndStoreTodos() async {
     try {
-      logger.i("Fetching todos from API");
-      final response = await dio.get('https://api.nstack.in/v1/todos');
+      logger.i("Fetching todos from API through TaskApiService");
+      // Fetch the tasks from the API using the TaskApiService
+      List<TaskModel> apiTaskList = await taskApiService.getTasksfromAPI();
 
-      if (response.statusCode == 200) {
-        // Parse the response data
-        List<dynamic> todos = response.data['items'];
-        List<TaskModel> apiTaskList =
-            todos.map((item) => TaskModel.fromApiMap(item)).toList();
+      // Fetch existing tasks from the local database
+      List<TaskModel> dbTaskList = await getTasks();
 
-        // Fetch existing tasks from the database
-        List<TaskModel> dbTaskList = await getTasks();
-
-        // Synchronize tasks with the API
-        for (var apiTask in apiTaskList) {
-          try {
-            final dbTask =
-                dbTaskList.firstWhere((task) => task.id == apiTask.id);
-            if (dbTask != apiTask) {
-              await updateTask(apiTask); // Update existing task
-            }
-          } catch (e) {
-            await addTask(apiTask); // Add new task if it doesn't exist
+      // Synchronize tasks with the API
+      for (var apiTask in apiTaskList) {
+        try {
+          // Try to find the task in the local database
+          final dbTask = dbTaskList.firstWhere((task) => task.id == apiTask.id);
+          // If the task exists but is different, update it
+          if (dbTask != apiTask) {
+            await updateTask(apiTask); // Update the task in the database
           }
+        } catch (e) {
+          // If the task doesn't exist in the database, add it
+          await addTask(apiTask); // Add the new task to the database
         }
-
-        // Check for tasks in the database that are not in the API
-        for (var dbTask in dbTaskList) {
-          try {
-            // If task exists in API, do nothing
-            // ignore: unused_local_variable
-            final apiTask =
-                apiTaskList.firstWhere((task) => task.id == dbTask.id);
-          } catch (e) {
-            await deleteTask(
-                dbTask.id); // Delete task if it does not exist in API
-          }
-        }
-
-        logger.i("Fetched and synchronized tasks with the API");
-      } else {
-        logger.e("Failed to fetch todos: ${response.statusCode}");
       }
+
+      // Check for tasks in the database that are not present in the API
+      for (var dbTask in dbTaskList) {
+        try {
+          // Try to find the task in the API response
+          // ignore: unused_local_variable
+          final apiTask =
+              apiTaskList.firstWhere((task) => task.id == dbTask.id);
+        } catch (e) {
+          // If the task does not exist in the API, delete it from the database
+          await deleteTask(dbTask.id); // Delete the task from the database
+        }
+      }
+
+      logger.i("Fetched and synchronized tasks with the API");
     } catch (e) {
       logger.e("Error fetching todos from API: $e");
     }

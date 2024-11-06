@@ -10,6 +10,28 @@ class TaskApiService {
   static final logger = getLogger('TaskApiService');
   final Dio dio = Dio();
 
+  /// Fetches all tasks from the API.
+  Future<List<TaskModel>> getTasksfromAPI() async {
+    try {
+      logger.i("Fetching tasks from API");
+      final response = await dio.get('https://api.nstack.in/v1/todos');
+
+      if (response.statusCode == 200) {
+        List<dynamic> todos = response.data['items'];
+        List<TaskModel> taskList =
+            todos.map((item) => TaskModel.fromApiMap(item)).toList();
+        logger.i("Fetched ${taskList.length} tasks from API");
+        return taskList;
+      } else {
+        logger.e("Failed to fetch tasks: ${response.statusCode}");
+        return [];
+      }
+    } catch (e) {
+      logger.e("Error fetching tasks from API: $e");
+      return [];
+    }
+  }
+
   /// Posts a new task to the API.
   ///
   /// Parameters:
