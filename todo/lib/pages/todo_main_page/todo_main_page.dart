@@ -190,7 +190,9 @@ class TodoMainPage extends ConsumerWidget {
   /// Returns a [FloatingActionButton] that navigates to the task input page
   /// when pressed. If a new task is created, it adds it to the task provider.
   FloatingActionButton buildFloatingButton(
-      BuildContext context, WidgetRef ref) {
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     logger.t("Executing buildFloatingButton method");
     return FloatingActionButton(
       onPressed: () async {

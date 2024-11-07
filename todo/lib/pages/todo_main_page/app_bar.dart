@@ -10,10 +10,11 @@ part of 'todo_main_page.dart';
 /// - [context]: The BuildContext for the app bar.
 /// - [ref]: The WidgetRef to access the tasks provider.
 AppBar buildAppBar(
-    BuildContext context,
-    WidgetRef ref,
-    GlobalKey<State<StatefulWidget>> refreshTasksKey,
-    GlobalKey<State<StatefulWidget>> popupMenuKey) {
+  BuildContext context,
+  WidgetRef ref,
+  GlobalKey<State<StatefulWidget>> refreshTasksKey,
+  GlobalKey<State<StatefulWidget>> popupMenuKey,
+) {
   final width = MediaQuery.of(context).size.width;
 
   return AppBar(

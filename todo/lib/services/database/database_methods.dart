@@ -15,7 +15,7 @@ class DatabaseMethods {
   /// Fetches todos from the API and synchronizes them with the local database.
   ///
   /// This method:
-  /// 1. Fetches the task list from the API via the [TaskApiService].
+  /// 1. Fetches the task list from the API via [TaskApiService].
   /// 2. Retrieves the current task list from the local database.
   /// 3. Synchronizes the tasks by:
   ///    - Updating existing tasks that have changed.
@@ -24,43 +24,72 @@ class DatabaseMethods {
   Future<void> fetchAndStoreTodos() async {
     try {
       logger.i("Fetching todos from API through TaskApiService");
-      // Fetch the tasks from the API using the TaskApiService
-      List<TaskModel> apiTaskList = await taskApiService.getTasksfromAPI();
 
-      // Fetch existing tasks from the local database
+      // Retrieve task list from API
+      List<TaskModel> apiTaskList = await taskApiService.getTasksfromAPI();
+      // Retrieve task list from local database
       List<TaskModel> dbTaskList = await getTasks();
 
-      // Synchronize tasks with the API
-      for (var apiTask in apiTaskList) {
-        try {
-          // Try to find the task in the local database
-          final dbTask = dbTaskList.firstWhere((task) => task.id == apiTask.id);
-          // If the task exists but is different, update it
-          if (dbTask != apiTask) {
-            await updateTask(apiTask); // Update the task in the database
-          }
-        } catch (e) {
-          // If the task doesn't exist in the database, add it
-          await addTask(apiTask); // Add the new task to the database
-        }
-      }
-
-      // Check for tasks in the database that are not present in the API
-      for (var dbTask in dbTaskList) {
-        try {
-          // Try to find the task in the API response
-          // ignore: unused_local_variable
-          final apiTask =
-              apiTaskList.firstWhere((task) => task.id == dbTask.id);
-        } catch (e) {
-          // If the task does not exist in the API, delete it from the database
-          await deleteTask(dbTask.id); // Delete the task from the database
-        }
-      }
+      // Synchronize tasks: add or update tasks from API to the local database
+      await _addOrUpdateTasks(apiTaskList, dbTaskList);
+      // Remove tasks from the local database that no longer exist in the API
+      await _deleteMissingTasks(apiTaskList, dbTaskList);
 
       logger.i("Fetched and synchronized tasks with the API");
     } catch (e) {
+      // Log error if the synchronization process fails
       logger.e("Error fetching todos from API: $e");
+    }
+  }
+
+  /// Adds or updates tasks in the database based on the list fetched from the API.
+  ///
+  /// For each task in [apiTaskList], this method:
+  /// - Tries to find the task in [dbTaskList] based on its ID.
+  /// - If the task does not exist in the database, it is added via [addTask].
+  /// - If the task exists but differs, it is updated via [updateTask].
+  ///
+  /// Parameters:
+  /// - [apiTaskList]: The list of tasks fetched from the API.
+  /// - [dbTaskList]: The list of tasks currently stored in the local database.
+  Future<void> _addOrUpdateTasks(
+      List<TaskModel> apiTaskList, List<TaskModel> dbTaskList) async {
+    for (var apiTask in apiTaskList) {
+      try {
+        // Try to find the task in the local database
+        final dbTask = dbTaskList.firstWhere((task) => task.id == apiTask.id);
+
+        // Update if the task exists but is different
+        if (dbTask != apiTask) {
+          await updateTask(apiTask);
+        }
+      } catch (e) {
+        // Task not found in the database; add it
+        await addTask(apiTask);
+      }
+    }
+  }
+
+  /// Deletes tasks from the local database that are no longer present in the API.
+  ///
+  /// For each task in [dbTaskList], this method:
+  /// - Tries to find the task in [apiTaskList] based on its ID.
+  /// - If the task does not exist in the API, it is deleted via [deleteTask].
+  ///
+  /// Parameters:
+  /// - [apiTaskList]: The list of tasks fetched from the API.
+  /// - [dbTaskList]: The list of tasks currently stored in the local database.
+  Future<void> _deleteMissingTasks(
+      List<TaskModel> apiTaskList, List<TaskModel> dbTaskList) async {
+    for (var dbTask in dbTaskList) {
+      try {
+        // Try to find the task in the API task list
+        // ignore: unused_local_variable
+        final apiTask = apiTaskList.firstWhere((task) => task.id == dbTask.id);
+      } catch (e) {
+        // Task not found in the API; delete it from the local database
+        await deleteTask(dbTask.id);
+      }
     }
   }
 
