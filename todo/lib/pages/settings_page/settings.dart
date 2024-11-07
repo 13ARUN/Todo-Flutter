@@ -1,68 +1,74 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:share_plus/share_plus.dart';
 import 'package:todo/providers/theme_provider.dart';
-import 'package:todo/services/database/database_methods.dart';
-import 'package:todo/utils/logger/log_output.dart';
+import 'package:todo/utils/export/export_methods.dart';
 import 'package:todo/utils/logger/logger.dart';
 
 part 'theme_option_widget.dart';
 part 'theme_selection_dialog.dart';
 
+/// A settings screen that allows users to configure app preferences,
+/// including theme selection, share todos and log exports.
+///
+/// This widget is a [ConsumerWidget] that utilizes Riverpod for state management.
+/// It displays options for changing the app's theme and exporting logs or todos.
 class Settings extends ConsumerWidget {
   const Settings({super.key});
 
+  /// Logger instance for tracking events in the Settings class.
   static final logger = getLogger('Settings');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logger.t("Build Method Executing");
-    final themeMode = ref.watch(themeProvider);
+    final themeMode =
+        ref.watch(themeProvider); // Watch for changes in the theme mode
     logger.d("Current Theme Mode: $themeMode");
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text('Settings'), // Title for the settings screen
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Display'),
+            const Text('Display'), // Section header for display options
             ListTile(
-              leading: const Icon(Icons.brightness_6_outlined),
-              title: const Text('Theme'),
-              subtitle:
-                  Text(ref.read(themeProvider.notifier).currentThemeOption),
+              leading: const Icon(
+                  Icons.brightness_6_outlined), // Icon for theme selection
+              title: const Text('Theme'), // Title of the list tile
+              subtitle: Text(ref
+                  .read(themeProvider.notifier)
+                  .currentThemeOption), // Displays current theme option
               contentPadding: const EdgeInsets.symmetric(horizontal: 15),
               onTap: () {
                 logger.i("Clicked on Theme Selection option");
-                _showThemeSelectionDialog(context, ref, themeMode);
+                _showThemeSelectionDialog(
+                    context, ref, themeMode); // Show theme selection dialog
               },
             ),
-            const Text('Advanced'),
+            const Text('Advanced'), // Section header for advanced options
             ListTile(
-              leading: const Icon(Icons.file_download),
-              title: const Text('Export Logs'),
+              leading: const Icon(Icons.file_download), // Icon for log export
+              title: const Text('Export Logs'), // Title of the list tile
               contentPadding: const EdgeInsets.symmetric(horizontal: 15),
               onTap: () async {
                 logger.i("Export Logs clicked");
-                await _exportLogs();
+                await ExportMethods
+                    .exportLogs(); // Trigger log export from ExportMethods
               },
             ),
             ListTile(
-              leading: const Icon(Icons.picture_as_pdf_sharp),
-              title: const Text('Share Todos as PDF'),
+              leading:
+                  const Icon(Icons.picture_as_pdf_sharp), // Icon for PDF export
+              title: const Text('Share Todos as PDF'), // Title of the list tile
               contentPadding: const EdgeInsets.symmetric(horizontal: 15),
               onTap: () async {
                 logger.i("Export Todos clicked");
-                await _exportTodosAsPDF();
+                await ExportMethods
+                    .exportTodosAsPDF(); // Trigger export of todos as PDF from ExportMethods
               },
             ),
           ],
@@ -71,6 +77,15 @@ class Settings extends ConsumerWidget {
     );
   }
 
+  /// Displays a dialog for selecting the app theme.
+  ///
+  /// This method shows a [ThemeSelectionDialog] that allows the user to
+  /// choose between different theme options for the application.
+  ///
+  /// Parameters:
+  /// - [context]: The build context used to display the dialog.
+  /// - [ref]: The [WidgetRef] used to access the theme provider.
+  /// - [themeMode]: The current [ThemeMode] of the application.
   void _showThemeSelectionDialog(
       BuildContext context, WidgetRef ref, ThemeMode themeMode) {
     logger.t("Executing _showThemeSelectionDialog method");
@@ -78,97 +93,10 @@ class Settings extends ConsumerWidget {
       context: context,
       builder: (BuildContext context) {
         return ThemeSelectionDialog(
-          themeMode: themeMode,
-          ref: ref,
+          themeMode: themeMode, // Pass the current theme mode to the dialog
+          ref: ref, // Pass the widget reference for theme updates
         );
       },
     );
-  }
-
-  Future<void> _exportLogs() async {
-    try {
-      final logOutput = await FileLogOutput.create();
-      final logFile = await logOutput.getLogFile();
-
-      logger.i("Log file path: ${logFile.path}");
-
-      if (await logFile.exists()) {
-        await Share.shareXFiles([XFile(logFile.path)],
-            text: 'Exported log file');
-        logger.i("Logs successfully shared for export");
-      } else {
-        logger.w("Log file not found for export");
-      }
-    } catch (e) {
-      logger.e("Error exporting logs: $e");
-    }
-  }
-
-  Future<void> _exportTodosAsPDF() async {
-    try {
-      final databaseMethods = DatabaseMethods();
-      final tasks = await databaseMethods.getTasks();
-      final pdf = pw.Document();
-
-      pdf.addPage(
-        pw.Page(
-          build: (pw.Context context) {
-            return pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text('Todos', style: const pw.TextStyle(fontSize: 24)),
-                pw.SizedBox(height: 20),
-                ...tasks.map(
-                  (task) {
-                    return pw.Row(
-                      children: [
-                        pw.Expanded(
-                          child: pw.Text(
-                            task.title,
-                            style: const pw.TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        pw.Expanded(
-                          child: pw.Text(
-                            task.description,
-                            style: const pw.TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        pw.Text(
-                          task.isCompleted == true
-                              ? 'Completed'
-                              : 'Not Completed',
-                          style: pw.TextStyle(
-                              fontSize: 16,
-                              color: task.isCompleted
-                                  ? const PdfColor(0.0, 1.0, 0.0)
-                                  : const PdfColor(1.0, 0.0, 0.0)),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            );
-          },
-        ),
-      );
-
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/exported_todos.pdf');
-      await file.writeAsBytes(await pdf.save());
-
-      logger.i("Todo PDF file path: ${file.path}");
-
-      if (await file.exists()) {
-        await Share.shareXFiles([XFile(file.path)],
-            text: 'Exported todos as PDF');
-        logger.i("Todos successfully shared for export as PDF");
-      } else {
-        logger.w("Todo PDF file not found for export");
-      }
-    } catch (e) {
-      logger.e("Error exporting todos as PDF: $e");
-    }
   }
 }

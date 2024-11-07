@@ -9,18 +9,31 @@ import 'package:todo/providers/tasks_provider.dart';
 import 'package:todo/theme/theme_data.dart';
 import 'package:todo/utils/logger/logger.dart';
 
+/// A widget that represents a single task item in the task list.
 class TaskItem extends ConsumerWidget {
+  /// Creates a [TaskItem] widget.
+  ///
+  /// The [task] parameter must not be null and represents the task to display.
   const TaskItem({
     super.key,
     required this.task,
   });
 
+  /// Logger for tracking actions in this class.
   static final logger = getLogger('TaskItem');
+
+  /// The task model that this widget represents.
   final TaskModel task;
 
+  /// Displays a confirmation dialog before deleting the task.
+  ///
+  /// This method shows a [CupertinoAlertDialog] on iOS and a [AlertDialog]
+  /// on other platforms, asking the user to confirm the deletion of the task.
   Future<void> _showDeleteConfirmation(
       BuildContext context, WidgetRef ref) async {
     logger.t("Executing _showDeleteConfirmation method");
+
+    // Display different dialogs based on the platform.
     if (Platform.isIOS) {
       logger.i("Displaying cupertino alert dialog");
       showCupertinoDialog<bool>(
@@ -28,7 +41,7 @@ class TaskItem extends ConsumerWidget {
         builder: (ctx) => CupertinoAlertDialog(
           title: const Text('Delete Task'),
           content: Text(
-            "Are you sure you want to delete the task '${task.title}' ?",
+            "Are you sure you want to delete the task '${task.title}'?",
           ),
           actions: [
             CupertinoDialogAction(
@@ -54,7 +67,7 @@ class TaskItem extends ConsumerWidget {
         builder: (ctx) => AlertDialog(
           title: const Text('Delete Task'),
           content: Text(
-            "Are you sure you want to delete the task '${task.title}' ?",
+            "Are you sure you want to delete the task '${task.title}'?",
           ),
           actions: [
             TextButton(
@@ -77,14 +90,18 @@ class TaskItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logger.t("Build Method Executing");
+
+    // Retrieve the current theme and check if dark mode is active.
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
     return ListTile(
       onTap: task.isCompleted
-          ? null
+          ? null // Disable tap action if the task is completed.
           : () async {
               logger.i("Clicked on task with Task ID: ${task.id} to edit");
+
+              // Navigate to the task input page to edit the task.
               final editedTask = await Navigator.push<TaskModel>(
                 context,
                 MaterialPageRoute(
@@ -95,6 +112,7 @@ class TaskItem extends ConsumerWidget {
                 ),
               );
 
+              // If a task is edited, update it in the provider.
               if (editedTask != null) {
                 ref.read(tasksProvider.notifier).editTask(editedTask);
               }
@@ -105,10 +123,11 @@ class TaskItem extends ConsumerWidget {
           fontSize: 20,
         ),
       ),
-      subtitle: Text(task.date),
+      subtitle: Text(task.date), // Display the task date.
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Checkbox to mark the task as completed.
           Checkbox(
             value: task.isCompleted,
             onChanged: (value) {
@@ -117,6 +136,7 @@ class TaskItem extends ConsumerWidget {
               }
             },
           ),
+          // Icon button to delete the task.
           IconButton(
             icon: const Icon(Icons.delete_rounded),
             onPressed: () => _showDeleteConfirmation(context, ref),
@@ -132,7 +152,7 @@ class TaskItem extends ConsumerWidget {
               ? darkColorScheme.surfaceContainerLow
               : lightColorScheme.surfaceContainerHigh
           : isDarkMode
-              ? darkColorScheme.onPrimaryFixedVariant
+              ? darkColorScheme.inversePrimary
               : lightColorScheme.primaryFixedDim,
     );
   }
