@@ -18,7 +18,7 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
   /// Constructs a [ThemeNotifier] with the initial theme mode set to system
   /// default. It also loads the previously saved theme preference.
   ThemeNotifier() : super(ThemeMode.system) {
-    _loadThemeMode();
+    loadThemeMode();
   }
 
   /// Sets the theme mode and stores the preference locally.
@@ -42,7 +42,7 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
   }
 
   /// Loads the theme mode from local storage and sets it as the current state.
-  Future<void> _loadThemeMode() async {
+  Future<void> loadThemeMode() async {
     logger.t("Executing _loadThemeMode method");
     try {
       logger.i("Obtaining locally stored Theme Preference");
