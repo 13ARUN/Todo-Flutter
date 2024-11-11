@@ -10,9 +10,6 @@ import 'package:todo/utils/snackbar/snackbar_service.dart';
 /// The entry point of the application.
 /// It runs the [MyApp] widget within a [ProviderScope] to enable
 /// state management using Riverpod.
-// void main() {
-//   runApp(const ProviderScope(child: MyApp()));
-// }
 
 void main() {
   runApp(
